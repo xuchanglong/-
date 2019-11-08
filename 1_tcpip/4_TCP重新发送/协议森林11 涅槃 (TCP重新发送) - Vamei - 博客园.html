@@ -1,0 +1,2312 @@
+<!DOCTYPE html>
+<!-- saved from url=(0061)https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html -->
+<html lang="zh-cn" data-blockbyte-bs-uid="76623"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen"></style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}</style><style class="darkreader darkreader--user-agent" media="screen">html {
+    background-color: #181a1b !important;
+}
+html, body, input, textarea, select, button {
+    background-color: #181a1b;
+}
+html, body, input, textarea, select, button {
+    border-color: #575757;
+    color: #e8e6e3;
+}
+a {
+    color: #3391ff;
+}
+table {
+    border-color: #4c4c4c;
+}
+::placeholder {
+    color: #bab5ab;
+}
+::selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+::-moz-selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #545b00 !important;
+    color: #e8e6e3 !important;
+}
+::-webkit-scrollbar {
+    background-color: #1c1e1f;
+    color: #c5c1b9;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2a2c2e;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #323537;
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: #3d4043;
+}
+::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+* {
+    scrollbar-color: #2a2c2e #1c1e1f;
+}</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="作者：Vamei 出处：http://www.cnblogs.com/vamei 欢迎转载，也请保留这段声明。谢谢！TCP协议是一个可靠的协议。它通过重新发送(retransmission)来实现TC">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园</title>
+    
+    <link rel="stylesheet" href="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/blog-common.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    <link id="MainCss" rel="stylesheet" href="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/bundle-lessismore.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/bundle-lessismore-mobile.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/vamei/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/vamei/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/vamei/wlwmanifest.xml">
+    <script async="" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/analytics.js.下载"></script><script src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/jquery-2.2.0.min.js.下载"></script><style class="darkreader darkreader--override" media="screen">.jfk-bubble {
+    background-color: #000000 !important;
+}
+.vimvixen-hint {
+    background-color: #7b5300 !important;
+    border-color: #d8b013 !important;
+    color: #f3e8c8 !important;
+}</style><style type="text/css" abt="234"></style><style class="darkreader darkreader--sync" media="screen"></style>
+    <script src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/blog-common.min.js.下载"></script>
+    <script>
+        var currentBlogId = 118754;
+        var currentBlogApp = 'vamei';
+        var cb_enable_mathjax = true;
+        var isLogined = true;
+    </script>
+    <script type="text/x-mathjax-config;executed=true">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/MathJax.js.下载"></script>
+    
+<script>//remove baidu search ad
+var _countAA = 0
+function doBBBd(){
+    var alla = document.getElementsByTagName('a')
+    for(var i = 0; i < alla.length; i++){
+        if(/baidu.com\/(baidu.php\?url=|adrc.php\?t)/.test(alla[i].href)){
+            var _temp = alla[i].parentElement, loop = 0
+            while(loop < 5){
+                _temp = _temp.parentElement
+                loop++
+                if(_temp.parentElement.id == 'content_left'){
+                    _temp.remove()
+                    break
+                }
+            }
+        }
+    }
+    
+    if(_countAA++ < 20){
+        setTimeout(doBBBd, 500)
+    }
+    
+}
+doBBBd()
+document.addEventListener('keyup', function(){_countAA-=10;doBBBd()}, false)
+document.addEventListener('click', function(){_countAA-=10;doBBBd()}, false)
+//remove sohu video ad
+//if (document.URL.indexOf("tv.sohu.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+//remove 56.com video ad
+//if (document.URL.indexOf("56.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+</script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style class="blockbyte-bs-style" data-name="content">body>div#blockbyte-bs-indicator>div{opacity:0;pointer-events:none}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-visible,body>iframe#blockbyte-bs-overlay.blockbyte-bs-visible{opacity:1;pointer-events:auto}body.blockbyte-bs-noscroll{overflow:hidden !important}body>div#blockbyte-bs-indicator>div{position:absolute;transform:translate3d(-40px, 0, 0);top:0;left:0;width:40px !important;height:100%;background:rgba(0,0,0,0.5);border-radius:0 10px 10px 0;transition:opacity 0.3s, transform 0.3s;z-index:2}body>div#blockbyte-bs-indicator>div>span{-webkit-mask:no-repeat center/32px;-webkit-mask-image:url(chrome-extension://jdbnofccmhefkmjbkkdkfiicjkgofkdh/img/icon-bookmark.svg);background-color:#ffffff;position:absolute;display:block;top:0;left:0;width:100%;height:100%}body>div#blockbyte-bs-indicator[data-pos='right']{left:auto;right:0}body>div#blockbyte-bs-indicator[data-pos='right']>div{transform:translate3d(40px, 0, 0);left:auto;right:0;border-radius:10px 0 0 10px}body>div#blockbyte-bs-indicator.blockbyte-bs-fullHeight>div{border-radius:0}body>div#blockbyte-bs-indicator.blockbyte-bs-hover>div{transform:translate3d(0, 0, 0);opacity:1}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb{height:100% !important;top:0 !important}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb>div{background:transparent}body>div#blockbyte-bs-indicator[data-pos='left'].blockbyte-bs-has-lsb>div>span{-webkit-mask-position-y:20px}body>iframe#blockbyte-bs-sidebar{width:350px;max-width:none;height:0;z-index:2147483646;background-color:rgba(0,0,0,0.6) !important;border:none;display:block !important;transform:translate3d(-350px, 0, 0);transition:width 0s 0.3s, height 0s 0.3s, opacity 0.3s, transform 0.3s}body>iframe#blockbyte-bs-sidebar[data-pos='right']{left:auto;right:0;transform:translate3d(350px, 0, 0)}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-visible{width:calc(100% + 350px);height:100%;transform:translate3d(0, 0, 0);transition:opacity 0.3s, transform 0.3s}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-hideMask{background:none !important}body>iframe#blockbyte-bs-sidebar.blockbyte-bs-hideMask:not(.blockbyte-bs-hover){width:calc(350px + 50px)}body>iframe#blockbyte-bs-overlay{width:100%;max-width:none;height:100%;z-index:2147483647;border:none;background:rgba(0,0,0,0.5) !important;transition:opacity 0.3s}
+</style><style class="darkreader darkreader--sync" media="screen"></style></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+    <a name="top"></a>
+    <div id="page_begin_html">
+        <link rel="stylesheet" type="text/css" href="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/custom.css"><style class="darkreader darkreader--cors" media="screen">div.itnews, div#ad_under_post_holder {
+    display: none;
+}
+
+svg, #green_channel, iframe, img, div.commentform input.author, div.commentform textarea, .commentbox_title  {
+    max-width: 90%;
+}
+
+body {
+   word-wrap: break-word;
+}
+
+-ms-word-break: break-all;
+
+     
+     word-break: break-all;
+
+     
+     word-break: break-word;
+
+-webkit-hyphens: auto;
+   -moz-hyphens: auto;
+        hyphens: auto;
+
+#navigator {  height:auto; overflow:hidden; *zoom:1;}
+#navList { float:left; }
+#navList li { display: inline; float: none; }
+
+#sideBar { width: 20%; border: none; padding: 0; }
+#sideBar h3 { padding-left: 8px; }
+#sideBarMain { padding-left: 8px; }
+.day { margin: 20px 0px; }
+.postTitle { padding-left: 20px; }
+.postBody, .postCon { padding: 0px 20px 10px; 
+                      border-bottom: 1px solid #D9DBE1; }
+.postDesc { padding-right: 20px; }
+#navigator, #MySignature, .day, .post { border: 1px solid #D9DBE1; border-radius: 8px;  }
+#navigator { border-radius: 8px 8px 0px 0px; }
+.post { padding-top: 1px; }
+
+body 
+{ 
+   text-align:center; 
+}
+
+#home 
+{ 
+   margin: 0px auto; 
+   text-align:left; 
+   max-width:1200px;
+}
+ 
+
+#sideBar { width: 20%; }
+#mainContent { margin-left: auto; width:78%; }
+.forFlow { margin:auto; }
+
+@-ms-viewport {
+    width: device-width;
+}
+
+@media (max-width:990px) {
+    #home{ margin:0 15px; }
+}
+
+@media (max-width:640px) {
+    body {font-size: 16px; }
+    .cnblogs_code span { font-size: 16px!important; }
+    #sideBar, #mainContent{ width:100%;}
+    .post{ border:none; }
+}
+
+a {
+  max-width: 90%;
+  max-height: 90%;
+  color: #399ab2;
+}
+
+div#cnblogs_post_body h3 {
+    margin: 1em 0 0.5em 0;
+    font-weight: 600;
+    font-family: 'Titillium Web', sans-serif;
+    position: relative;
+    text-shadow: 0 -1px 1px rgba(0,0,0,0.4);
+    font-size: 20px;
+    line-height: 40px;
+    color: #355681;
+    border-bottom: 1px solid rgba(53,86,129, 0.3);
+}
+
+h3.catListTitle {
+  background-color: #F0F8FF;
+  color: #000000;
+  text-indent: 2px;
+}
+
+#MySignature
+{ 
+  border-top: #e0e0e0 1px dashed;
+  border-right: #e0e0e0 1px dashed;
+  border-bottom: #e0e0e0 1px dashed;
+  border-left: #e0e0e0 1px dashed;
+  padding-top: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  font-family: 微软雅黑;
+  font-size:11px;
+}</style><style class="darkreader darkreader--sync" media="screen"></style>
+
+<a href="https://github.com/Vamei"><img style="position: absolute; top: 0px; right: 0px; border: 0px; --darkreader-inline-border-top: initial; --darkreader-inline-border-right: initial; --darkreader-inline-border-bottom: initial; --darkreader-inline-border-left: initial;" src="https://github-camo.global.ssl.fastly.net/652c5b9acfaddf3a9c326fa6bde407b87f7be0f4/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" data-darkreader-inline-border-top="" data-darkreader-inline-border-right="" data-darkreader-inline-border-bottom="" data-darkreader-inline-border-left=""></a>
+
+<!-- Math Equation Display -->
+<script type="text/x-mathjax-config;executed=true">
+MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX", "output/HTML-CSS"],
+    tex2jax: {
+    inlineMath: [ ["\[$","$\]"], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    processEscapes: true
+  },
+  "HTML-CSS": { availableFonts: ["TeX"] }
+});
+</script>
+
+<script src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/MathJax.js(1).下载" id="">
+</script>
+
+<!-- responsive -->
+<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        var meta = document.createElement("meta");
+        meta.name = "viewport";
+        meta.content = "width=device-width, initial-scale=1.0";
+        $('head').prepend(meta);
+    });
+</script>
+    </div>
+    <div id="home">
+    <div id="header">
+        <div id="blogTitle">
+            
+<div class="title"><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/vamei/">Vamei</a>
+</div>
+<div class="subtitle">
+编程，数学，设计
+</div>
+
+        </div>
+        <div id="navigator">
+            
+<ul id="navList">
+    <li id="nav_sitehome"><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+    <li id="nav_myhome">
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/vamei/">
+首页</a>
+</li>
+    <li id="nav_newpost">
+
+
+</li>
+    <li id="nav_contact">
+</li>
+    <li id="nav_rss">
+<a id="blog_nav_rss" class="menu" href="https://www.cnblogs.com/vamei/rss/">
+订阅</a></li>
+    <li id="nav_admin">
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+</ul>
+
+            <div class="blogStats">
+                
+<span id="stats_post_count">随笔 - 
+234&nbsp;</span>
+<span id="stats_article_count">文章 - 
+1&nbsp;</span>
+<!-- <span id="stats-comment_count"></span> -->
+<span id="stats_comment_count">评论 - 
+4811</span>
+            </div>
+        </div>
+    </div>
+    <div id="main">
+        <div id="mainContent">
+            <div class="forFlow">
+                <div id="post_detail">
+    <div id="topics">
+        <div class="post">
+            <h1 class="postTitle">
+                
+<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html">协议森林11 涅槃 (TCP重新发送)</a>
+
+            </h1>
+            <div class="clear"></div>
+            <div class="postBody">
+                
+<div id="cnblogs_post_body" class="blogpost-body ">
+    <p><span style="font-family: courier new,courier;">作者：Vamei 出处：http://www.cnblogs.com/vamei 欢迎转载，也请保留这段声明。谢谢！</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<p><span style="font-family: courier new,courier;">TCP协议是一个可靠的协议。它通过<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">重新发送</span>(retransmission)来实现TCP片段传输的<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">可靠性</span>。简单的说，TCP会不断重复发送TCP片段，直到片段被正确接收。</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<h3><span style="font-family: courier new,courier;">TCP片段丢失</span></h3>
+<p><span style="font-family: courier new,courier;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/05145804-2a272ff894eb43029622464e4ee32cbb.png" alt=""></span></p>
+<p style="text-align: center;"><span style="font-family: courier new,courier;">TCP头部的checksum</span></p>
+<p><span style="font-family: courier new,courier;">接收方(receiver)可以通过校验TCP片段头部中<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">checksum区域</span>来检验TCP片段是否<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">出错</span>。我们已经接触过了<a href="http://www.cnblogs.com/vamei/archive/2012/12/02/2796988.html">IP协议详解的checksum算法</a>。TCP片段的checksum算法与之类似。IP协议的checksum只校验头部，TCP片段头部的checksum会校验包括IP头部、TCP头部和TCP数据在内的整个序列，确保IP地址、端口号和其他相关信息正确。如果TCP片段出错，接收方可以简单的丢弃改TCP片段，也就<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">相当于TCP片段丢失</span>。</span></p>
+<p><span style="font-family: courier new,courier;">TCP片段包裹在一个IP包中传输。IP包可能在网络中<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">丢失</span>。导致IP包丢失的原因可能有很多，比如IP包经过太多的路由器接力，达到hop limit；比如路由器太过拥挤，导致一些IP包被丢弃；再比如路由表(routing table)没有及时更新，导致IP包无法送达目的地。</span></p>
+<p><span style="font-family: courier new,courier;">下面我们要介绍两种重新发送TCP片段的机制：<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">超时重新发送</span>和<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">快速重新发送</span>。&nbsp;</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<h3><span style="font-family: courier new,courier;">超时重新发送</span></h3>
+<p><span style="font-family: courier new,courier;">我们之前已经简单介绍过重新发送的机制：当发送方送出一个TCP片段后，将开始计时，等待该TCP片段的ACK回复。如果接收方正确接收到符合次序的片段，接收方会利用ACK片段回复发送方。发送方得到ACK回复后，继续移动窗口，发送接下来的TCP片段。如果直到计时完成，发送方还是没有收到ACK回复，那么发送方推断之前发送的TCP片段丢失，因此重新发送之前的TCP片段。这个计时等待的时间叫做<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">重新发送超时时间</span>(<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">RTO</span>, retransmission timeout)。</span></p>
+<p style="text-align: center;"><span style="font-family: courier new,courier;">&nbsp;<img src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/04111039-4838b6be7b72475787000ad9ca8a9378.jpg" alt=""></span></p>
+<p style="text-align: center;"><span style="font-family: courier new,courier;">RTO：沙漏中沙子的多少</span></p>
+<p><span style="font-family: courier new,courier;">发送方应该在等待多长时间之后重新发送呢？这是重新发送的核心问题。上述过程实际上有往返两个方向：1. 发送片段从发送方到接收方的传输，2. ACK片段从接收方到发送方的传输。整个过程实际耗费的时间称做<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">往返时间</span>(<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">RTT</span>, round trip time)。如果RTT是固定的，比如1秒，那么我们可以让RTO等于RTT。但实际上，RTT的上下浮动很大。比如某个时刻，网络中有许多交通，那么RTT就增加。在RTT浮动的情况下，如果我们设置了过小的RTO，那么TCP会等待很短的时间之后重新发送，而实际上之前发送的片段并没有丢失，只是传输速度比较慢而已，这样，网络中就被重复注入TCP片段，从而浪费网络传输资源。另一方面，如果RTO时间过长，那么当TCP片段已经实际丢失的情况下，发送方不能及时重新发送，会造成网络资源的闲置。所以，RTO必须符合当前网络的使用状况。网络状况越好，RTO应该越短；网络状况越差，RTO应该越长。</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;<img style="display: block; margin-left: auto; margin-right: auto;" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/05145612-c31b86acbce1413885aa9c41ad5bb4ad.jpg" alt=""></span></p>
+<p style="text-align: center;"><span style="font-family: courier new,courier;">RTT: 往返时间</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<p><span style="font-family: courier new,courier;">TCP协议通过统计RTT，来决定合理的RTO。发送方可以测量每一次TCP传输的RTT (从发送出数据片段开始，到接收到ACK片段为止)，这样的每次测量得到的往返时间，叫做<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">采样RTT</span>(<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">srtt</span>, sampling round trip time)。建立连接之后，每次的srtt作为采样样本，计算平均值(mean)和标准差(standard deviation)，并让RTO等于srtt平均值加上四倍的srtt标准差。</span></p>
+<p style="text-align: center;"><span style="color: rgb(0, 0, 255); font-family: &quot;courier new&quot;, courier; --darkreader-inline-color:#337dff;" data-darkreader-inline-color="">RTO = mean + 4 std</span></p>
+<p><span style="font-family: courier new,courier;">(上述算法有多个变种，根据平台不同有所变化)</span></p>
+<p><span style="font-family: courier new,courier;">平均值反映了平均意义上的RTT，平均往返时间越大，RTO越大。另一方面，标准差越大也会影响RTO。标准差代表了RTT样本的<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">离散</span>程度。如果RTT上下剧烈浮动，标准差比较大。RTT浮动大，说明当前网络状况相对不稳定。因此要设置更长的RTO，以应对<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">不稳定</span>的网络状况。</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<h3><span style="font-family: courier new,courier;">快速重新发送</span></h3>
+<p><span style="font-family: courier new,courier;">我们刚才介绍了超时重新发送的机制：发送方送出一个TCP片段，然后开始等待并计时，如果RTO时间之后还没有收到ACK回复，发送方则重新发送。TCP协议有可能在计时完成之前启动重新发送，也就是利用<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">快速重新发送</span>(fast-retransmission)。快速发送机制如果被启动，将打断计时器的等待，直接重新发送TCP片段。</span></p>
+<p><span style="font-family: courier new,courier;">由于IP包的传输是无序的，所以接收方有可能先收到后发出的片段，也就是<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">乱序(out-of-order)</span>片段。乱序片段的序号并不等于最近发出的ACK回复号。已接收的文本流和乱序片段之间将出现<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">空洞</span>(hole)，也就是等待接收的空位。比如已经接收了正常片段5,6,7，此时又接收乱序片段9。这时片段8依然空缺，片段8的位置就是一个空洞。</span></p>
+<p><span style="font-family: courier new,courier;"><img style="display: block; margin-left: auto; margin-right: auto;" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/04110340-b9273e8d86b144f99c29f83f7afac50c.jpg" alt=""></span></p>
+<p style="text-align: center;"><span style="font-family: courier new,courier;">补上空洞</span></p>
+<p><span style="font-family: courier new,courier;">TCP协议规定，当接收方收到乱序片段的时候，需要<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">重复发送ACK</span>。比如接收到乱序片段9的时候，接收方需要回复ACK。回复号为8 (7+1)。此后接收方如果继续收到乱序片段(序号不是8的片段)，将再次重复发送ACK=8。当发送方收到3个ACK=8的回复时，发送方推断片段8丢失。即使此时片段8的计时器还没有超时，发送方会打断计时，直接重新发送片段8，这就是快速重新发送机制(fast-retransmission)。</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<p><span style="font-family: courier new,courier;">快速重新发送机制利用重复的ACK来提示空洞的存在。当重复次数达到阈值时，认为<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">空洞对应的片段在网络中丢失</span>。快速重新发送机制提高了检测丢失片段的效率，往往可以在超时之前探测到丢失片段，并重复发送丢失的片段。</span></p>
+<p><span style="font-family: courier new,courier;">&nbsp;</span></p>
+<h3><span style="font-family: courier new,courier;">总结</span></h3>
+<p><span style="font-family: courier new,courier;">凤凰浴火重生。而TCP协议利用<span style="color: rgb(255, 0, 0); --darkreader-inline-color:#ff3333;" data-darkreader-inline-color="">重新发送(retransmission)</span>来实现TCP传输的可靠性。重新发送的基本形式是超时重新发送，根据统计的往返时间来设置超时标准；如果超时，则重新发送TCP片段。另一方面，快速重新发送则通过乱序片段的ACK来更早的推断出片段的丢失。</span></p>
+<p>&nbsp;</p>
+<p><span style="font-family: courier new,courier;"><span style="color: rgb(255, 0, 0); font-family: &quot;courier new&quot;, courier; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""><span style="color: rgb(0, 0, 0); --darkreader-inline-color:#e8e6e3;" data-darkreader-inline-color="">欢迎继续阅读“<a id="ctl03_CatList_LinkList_1_Link_3" href="http://www.cnblogs.com/vamei/archive/2012/12/05/2802811.html">协议森林</a>”系列</span></span></span></p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature" style="display: block;"><div id="MySignature">
+  <p>如果你喜欢这篇文章，欢迎<strong>推荐</strong>。</p>
+  <h4>技术推动进步，分享促进社区。</h4>
+</div></div>
+<div class="clear"></div>
+<div id="blog_post_info_block">
+<div id="EntryTag">
+    标签: 
+            <a href="https://www.cnblogs.com/vamei/tag/%E7%BD%91%E7%BB%9C/">网络</a></div>
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(2824748,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;3faf47ff-9ea8-e111-aa3f-842b2b196315&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/vamei/" target="_blank"><img src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/20140428204103.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/vamei/">Vamei</a><br>
+            <a href="https://home.cnblogs.com/u/vamei/followees/">关注 - 27</a><br>
+            <a href="https://home.cnblogs.com/u/vamei/followers/">粉丝 - 9031</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor">推荐博客</div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;3faf47ff-9ea8-e111-aa3f-842b2b196315&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(2824748,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">19</span>
+    </div>
+    <div class="buryit" onclick="votePost(2824748,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/vamei/archive/2012/12/18/2822739.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/vamei/archive/2012/12/18/2822739.html" title="发布于 2012-12-18 11:40">协议森林10 魔鬼细节 (TCP滑窗管理)</a>
+    <br>
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/10/2850199.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/vamei/archive/2013/01/10/2850199.html" title="发布于 2013-01-10 09:35">协议森林12 天下为公 (TCP堵塞控制)</a>
+
+</div>
+</div>
+            </div>
+            <div class="postDesc">posted @ 
+<span id="post-date">2013-01-05 17:00</span>&nbsp;<a href="https://www.cnblogs.com/vamei/">Vamei</a> 阅读(<span id="post_view_count">13018</span>) 评论(<span id="post_comment_count">21</span>) <a href="https://i.cnblogs.com/EditPosts.aspx?postid=2824748" rel="nofollow"> 编辑</a> <a href="javascript:void(0)" onclick="AddToWz(2824748); return false;">收藏</a>
+</div>
+        </div>
+<script src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/highlight.min.js.下载"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 118754, cb_blogApp = 'vamei', cb_blogUserGuid = '3faf47ff-9ea8-e111-aa3f-842b2b196315';
+    var cb_entryId = 2824748, cb_entryCreatedDate = '2013-01-05 17:00', cb_postType = 1; 
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder">
+
+<div id="comment_pager_top">
+    
+</div>
+
+
+<div class="feedback_area_title">评论列表</div>
+<div class="feedbackNoItems"></div>
+
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593181, &#39;RNDubY7nbgW5V1vI9OvyG37tCgVXeTM8WfyiqKReOns3aMn/uQsxvw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593181, &#39;RNDubY7nbgW5V1vI9OvyG37tCgVXeTM8WfyiqKReOns3aMn/uQsxvw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593181" class="layer">#1楼</a>
+<a name="2593181" id="comment_anchor_2593181"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-05 21:12</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593181" href="https://www.cnblogs.com/wangqing985/" target="_blank">雪中风筝</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593181" class="blog_comment_body">
+    这个系列文章太好了，弥补了互联网上片段性资料的特性，可以用来系统的学习
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593181, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593181, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593288, &#39;wTGbFSrJhNBIttQQF9SXZFoPT/rlU3ekDalMt1clol2oEYqM422lQw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593288, &#39;wTGbFSrJhNBIttQQF9SXZFoPT/rlU3ekDalMt1clol2oEYqM422lQw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593288" class="layer">#2楼</a>
+<a name="2593288" id="comment_anchor_2593288"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-06 00:24</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593288" href="https://www.cnblogs.com/ccww/" target="_blank">小吴99</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593288" class="blog_comment_body">
+    谢谢，学习了
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593288, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593288, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2593288_avatar" style="display:none">
+            https://pic.cnblogs.com/face/u370670.jpg?id=09004237
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593390, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593390, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593390" class="layer">#3楼</a>
+<a name="2593390" id="comment_anchor_2593390"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-06 09:56</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593390" href="https://home.cnblogs.com/u/354229/" target="_blank">耶和华</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593390" class="blog_comment_body">
+    终于更新了，楼主辛苦了！<br>先看
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593390, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593390, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593420, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593420, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593420" class="layer">#4楼</a>
+<a name="2593420" id="comment_anchor_2593420"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-06 10:26</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593420" href="https://home.cnblogs.com/u/354229/" target="_blank">耶和华</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593420" class="blog_comment_body">
+    网络方面的编程经验不是很多。<br>有个印象，timeout好像是在编码的时候可以设置，是不是这个timeout和文章中提到的timeout不是一个意思，不懂，请教楼主啊
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593420, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593420, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593435, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593435, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593435" class="layer">#5楼</a>
+<a name="2593435" id="comment_anchor_2593435"></a>
+[<span class="louzhu">楼主</span>]
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-06 10:41</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593435" href="https://www.cnblogs.com/vamei/" target="_blank">Vamei</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593435" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593420" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2593420);">@</a>
+耶和华<br>可以给一个更具体的例子么？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593435, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593435, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2593435_avatar" style="display:none">
+            https://pic.cnblogs.com/face/413416/20140428204103.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2593535, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2593535, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593535" class="layer">#6楼</a>
+<a name="2593535" id="comment_anchor_2593535"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-06 12:41</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2593535" href="https://home.cnblogs.com/u/354229/" target="_blank">耶和华</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2593535" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593435" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2593435);">@</a>
+Vamei<br>是我没说清楚，其实就是连接超时的意思，比如数据库连接的时候，超过一段时间就失败了，需要重新发起，这和文章中提到的timeout是不是一回事？还有，第一次连接的时候timeout是怎么算出来的？因为还没采样好像。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2593535, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2593535, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2594365, &#39;UMJWd8FJWrNup5rhsDN5IhVBDrFFmzMWuUR95KHy/Q0fclk6TWWDSw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2594365, &#39;UMJWd8FJWrNup5rhsDN5IhVBDrFFmzMWuUR95KHy/Q0fclk6TWWDSw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594365" class="layer">#7楼</a>
+<a name="2594365" id="comment_anchor_2594365"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-07 11:48</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2594365" href="https://www.cnblogs.com/yangcaogui/" target="_blank">TimYang</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2594365" class="blog_comment_body">
+    楼主参考的资料是什么呀！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2594365, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2594365, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2594365_avatar" style="display:none">
+            https://pic.cnblogs.com/face/322864/20131228231744.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2594446, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2594446, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594446" class="layer">#8楼</a>
+<a name="2594446" id="comment_anchor_2594446"></a>
+[<span class="louzhu">楼主</span>]
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-07 13:37</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2594446" href="https://www.cnblogs.com/vamei/" target="_blank">Vamei</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2594446" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594365" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2594365);">@</a>
+TimYang<br><a href="http://book.douban.com/doulist/1626951/" target="_blank">http://book.douban.com/doulist/1626951/</a>
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2594446, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2594446, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2594446_avatar" style="display:none">
+            https://pic.cnblogs.com/face/413416/20140428204103.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2594448, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2594448, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594448" class="layer">#9楼</a>
+<a name="2594448" id="comment_anchor_2594448"></a>
+[<span class="louzhu">楼主</span>]
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-07 13:39</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2594448" href="https://www.cnblogs.com/vamei/" target="_blank">Vamei</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2594448" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594365" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2594365);">@</a>
+TimYang<br>当然还有google和wikipedia
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2594448, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2594448, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2594448_avatar" style="display:none">
+            https://pic.cnblogs.com/face/413416/20140428204103.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2594566, &#39;FA1701BhLIdKoQicclhw8z/HzzwEiEvk0YBZlLAHzblBS1elSmw/AA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2594566, &#39;FA1701BhLIdKoQicclhw8z/HzzwEiEvk0YBZlLAHzblBS1elSmw/AA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2594566" class="layer">#10楼</a>
+<a name="2594566" id="comment_anchor_2594566"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-07 15:19</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2594566" href="https://www.cnblogs.com/wdfrog/" target="_blank">遗忘海岸</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2594566" class="blog_comment_body">
+    过来膜拜！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2594566, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2594566, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2594566_avatar" style="display:none">
+            https://pic.cnblogs.com/face/u24437.jpg
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2596566, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2596566, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2596566" class="layer">#11楼</a>
+<a name="2596566" id="comment_anchor_2596566"></a>
+[<span class="louzhu">楼主</span>]
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-09 22:01</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2596566" href="https://www.cnblogs.com/vamei/" target="_blank">Vamei</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2596566" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593535" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2593535);">@</a>
+耶和华<br>连接超时和这里不是一回事。这里是连接已经建立的情况。<br>我想可以通过SYN片段测量开始的RTT吧，也不是很确定，需要查一下。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2596566, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2596566, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2596566_avatar" style="display:none">
+            https://pic.cnblogs.com/face/413416/20140428204103.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2598036, &#39;nnwuAgXJjvtqvFpjLCthZU1UY3qbknrjytXCtkaMlAr/ZT679F0LBw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2598036, &#39;nnwuAgXJjvtqvFpjLCthZU1UY3qbknrjytXCtkaMlAr/ZT679F0LBw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2598036" class="layer">#12楼</a>
+<a name="2598036" id="comment_anchor_2598036"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-11 14:40</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2598036" href="https://www.cnblogs.com/qqloving/" target="_blank">互联网Fans</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2598036" class="blog_comment_body">
+    楼主的图文 堪称一大特色 啊
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2598036, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2598036, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2598036_avatar" style="display:none">
+            https://pic.cnblogs.com/face/92164/20140918182233.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2601919, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2601919, &#39;04Ilw5zJjg5QT++jnelPepLJzrtkKBQFZv/cLxCSgCP+x6I9uK6nmg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2601919" class="layer">#13楼</a>
+<a name="2601919" id="comment_anchor_2601919"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-01-17 10:22</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2601919" href="https://home.cnblogs.com/u/354229/" target="_blank">耶和华</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2601919" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2596566" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2596566);">@</a>
+Vamei<br>嗯 明白了，谢谢楼主！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2601919, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2601919, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2631671, &#39;sNgwtH2Bom8s9Tfyb66vJjw03M/aE1XJBHG3tHy/2Zh+p8HkHgjJlA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2631671, &#39;sNgwtH2Bom8s9Tfyb66vJjw03M/aE1XJBHG3tHy/2Zh+p8HkHgjJlA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2631671" class="layer">#14楼</a>
+<a name="2631671" id="comment_anchor_2631671"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-03-10 15:37</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2631671" href="https://home.cnblogs.com/u/503042/" target="_blank">scorpiofly</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2631671" class="blog_comment_body">
+    @Vamei，楼主，好。<br>拜读你的强文好。我有一点疑问想请教。在《协议森林》第10和第11节分别提到了累计ACK和快速重新发送。这两点都举了个类似的例子。即数据包乱序抵达。<br>我想问的是。收到了9，但6，7和8没有到达。假设滑动窗口大小为5。<br>对于快速重新发送是否是，接受方会发送7的ACK。此时如果又连接来了10和11（此时滑窗里只有9。但6，7和8留有空位。那么11，会否丢失掉？），那么会一直发送6的ACK（5+1）。直到发送方再次发送6，同时接收方也顺利接受并回复7的ACK了。是这样吗？<br>对于累计ACK，按上面的情况。这次也许情况变好。没有发生重新发送。<br>到达顺序为 5，（9，8，10，7，6）。那么此时，接受方会只发一个11的ACK。是这样吗？<br>谢谢
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2631671, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2631671, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2631831, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2631831, &#39;Vbw54O+7HsLA+9mlMI3W3vxkhVcKzpgYD8CuAa02Zzlv3wzmzxfEnA==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2631831" class="layer">#15楼</a>
+<a name="2631831" id="comment_anchor_2631831"></a>
+[<span class="louzhu">楼主</span>]
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-03-10 23:11</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2631831" href="https://www.cnblogs.com/vamei/" target="_blank">Vamei</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2631831" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2631671" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2631671);">@</a>
+scorpiofly<br>1. 对于快速重新发送是否是，接受方会发送7的ACK<br>是发送6的AKC吧？<br>2. 此时如果又连接来了10和11（此时滑窗里只有9。但6，7和8留有空位。那么11，会否丢失掉？）<br>会被丢掉<br>3. 直到发送方再次发送6，同时接收方也顺利接受并回复7的ACK了。是这样吗？<br>是的<br>4. 对于累计ACK，按上面的情况。这次也许情况变好。没有发生重新发送。<br>到达顺序为 5，（9，8，10，7，6）。那么此时，接受方会只发一个11的ACK。是这样吗？<br>在每次回复ACK之前，接收方实际上都会等待一段时间，看是否能累计ACK。所以如果上面的片段在等待时间之内，就会累计在一起回复。<br>如果等不来，那么接收方就会回复ACK 6了。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2631831, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2631831, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2631831_avatar" style="display:none">
+            https://pic.cnblogs.com/face/413416/20140428204103.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2770765, &#39;0jH1OhJVmfEe+8aj+sprThSN7eKJo/PY2m5MnOFBLIEo1qqi3gZt4g==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2770765, &#39;0jH1OhJVmfEe+8aj+sprThSN7eKJo/PY2m5MnOFBLIEo1qqi3gZt4g==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2770765" class="layer">#16楼</a>
+<a name="2770765" id="comment_anchor_2770765"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2013-09-08 10:17</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2770765" href="https://www.cnblogs.com/Qorange/" target="_blank">脐橙君</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2770765" class="blog_comment_body">
+    @Vamei，楼主有个问题，你的文章中说<br>TCP片段头部的checksum会校验包括IP头部、TCP头部和TCP数据在内的整个序列<br>这个checksum校验怎么还有IP头部呢？不是只有TCP的头部和数据吗？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2770765, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2770765, &#39;Bury&#39;, this.parentElement, false);">
+                反对(1)
+            </a>
+        </div>
+        <span id="comment_2770765_avatar" style="display:none">
+            https://pic.cnblogs.com/face/471594/20130710125028.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2870197, &#39;CYQy7Ka5+3CmcHQvX/GnfmtPuDXWItFU94NaY8R8BbqYclh1Tk6AXg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2870197, &#39;CYQy7Ka5+3CmcHQvX/GnfmtPuDXWItFU94NaY8R8BbqYclh1Tk6AXg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2870197" class="layer">#17楼</a>
+<a name="2870197" id="comment_anchor_2870197"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2014-02-04 13:28</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_2870197" href="https://home.cnblogs.com/u/602256/" target="_blank">kingboo501</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_2870197" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2770765" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2770765);">@</a>
+脐橙君<br>我也正纳闷这个问题。。。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2870197, &#39;Digg&#39;, this.parentElement, false);">
+                支持(1)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2870197, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3187256, &#39;gwZBEm73DMgLXAOhQ8SHTFRVWou9wcSk71DdP7qJs91+0sj3CqF89w==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3187256, &#39;gwZBEm73DMgLXAOhQ8SHTFRVWou9wcSk71DdP7qJs91+0sj3CqF89w==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#3187256" class="layer">#18楼</a>
+<a name="3187256" id="comment_anchor_3187256"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2015-05-19 17:43</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_3187256" href="https://home.cnblogs.com/u/758681/" target="_blank">你送我的风景</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_3187256" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593435" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2593435);">@</a>
+Vamei<br>最近开始拜读楼主的文章，本来对网络一窍不通的我，读完楼主的文章清晰了很多。我也和@脐橙君有相同的疑问，希望楼主能解答一下。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3187256, &#39;Digg&#39;, this.parentElement, false);">
+                支持(1)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3187256, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3828611, &#39;eHpJ2UhIJj8HthbyyFGoxl0/YVL0M8U0Suga2WezCp5e+KNALpf2Ww==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3828611, &#39;eHpJ2UhIJj8HthbyyFGoxl0/YVL0M8U0Suga2WezCp5e+KNALpf2Ww==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#3828611" class="layer">#19楼</a>
+<a name="3828611" id="comment_anchor_3828611"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2017-11-02 10:14</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_3828611" href="https://www.cnblogs.com/frankfankk/" target="_blank">逃兵</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_3828611" class="blog_comment_body">
+    @ 耶和华<br>你说的这个timeout知道是用户态应用层的概念。<br>比如在进行网络请求，服务器响应超时。这个超时由用户或者应用层控制实现。<br>而TCP这边的超时重传，『超时』这个概念是内核态协议栈中控制的。属于TCP协议的一部分，由专门的超时算法控制，这个『超时』是动态的，通过采样计算在途字节数等方式进行控制。隶属TCP流控算法的一部分。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3828611, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3828611, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3828611_avatar" style="display:none">
+            https://pic.cnblogs.com/face/392729/20140813084052.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3828613, &#39;eHpJ2UhIJj8HthbyyFGoxl0/YVL0M8U0Suga2WezCp5e+KNALpf2Ww==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3828613, &#39;eHpJ2UhIJj8HthbyyFGoxl0/YVL0M8U0Suga2WezCp5e+KNALpf2Ww==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#3828613" class="layer">#20楼</a>
+<a name="3828613" id="comment_anchor_3828613"></a>
+
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2017-11-02 10:15</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_3828613" href="https://www.cnblogs.com/frankfankk/" target="_blank">逃兵</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_3828613" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#2593420" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2593420);">@</a>
+耶和华<br>你说的这个timeout知道是用户态应用层的概念。<br>比如在进行网络请求，服务器响应超时。这个超时由用户或者应用层控制实现。<br>而TCP这边的超时重传，『超时』这个概念是内核态协议栈中控制的。属于TCP协议的一部分，由专门的超时算法控制，这个『超时』是动态的，通过采样计算在途字节数等方式进行控制。隶属TCP流控算法的一部分。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3828613, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3828613, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_3828613_avatar" style="display:none">
+            https://pic.cnblogs.com/face/392729/20140813084052.png
+        </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="feedbackItem">
+            <div class="feedbackListSubtitle">
+                <div class="feedbackManage">
+                    &nbsp;&nbsp;
+                    
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(4318055, &#39;RU28zdmhl11GtJkGG/GyNROroQQD1xjwQmZR2q4lNa3gGeUYHz4Nsg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(4318055, &#39;RU28zdmhl11GtJkGG/GyNROroQQD1xjwQmZR2q4lNa3gGeUYHz4Nsg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+                </div>
+                <!-- Title -->
+                
+<a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#4318055" class="layer">#21楼</a>
+<a name="4318055" id="comment_anchor_4318055"></a>
+
+        <span id="comment-maxId" style="display:none">4318055</span>
+        <span id="comment-maxDate" style="display:none">2019/8/6 上午8:45:39</span>
+
+                <!-- PostDate -->
+                
+<span class="comment_date">2019-08-06 08:45</span>
+
+
+                <!--NameLink-->
+                
+
+            <a id="a_comment_author_4318055" href="https://home.cnblogs.com/u/694414/" target="_blank">codewarrior</a>
+
+                <div class="feedbackCon">
+                    
+<div id="comment_body_4318055" class="blog_comment_body">
+    关于快重传讲的实在太简略了。实际细节还是很多的。
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4318055, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4318055, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+                </div>
+            </div>
+        </div>
+
+
+<div id="comment_pager_bottom">
+    
+</div>
+</div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/vamei/archive/2013/01/05/2824748.html#top">返回顶部</a></div>
+    <div id="comment_form_container"><script type="text/javascript" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/mention.js.下载"></script>
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+<p>
+    昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="xuchanglong">
+</p>
+<div class="commentbox_main">
+    <div class="commentbox_title">
+        <div class="commentbox_title_left">评论内容：</div>
+        <div class="commentbox_title_right">
+            <img id="ubb_quote" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+            <img id="ubb_bold" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+            <img id="ubb_url" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+            <img id="ubb_indent" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+            <img id="ubb_code" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+            <img id="ubb_img" class="comment_icon" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+        </div>
+    </div>
+    <textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+    <input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+    <span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+    <a href="javascript:void(0);" onclick="return logout();">退出</a>
+            <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></div>
+<p>[Ctrl+Enter快捷键提交]</p>
+<div style="display:none">
+    <span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+    <span id="span_parent_id"></span>
+    <span id="span_comment_replyto"></span>
+    <span id="span_comment_posted"></span>
+</div>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-工控&#39;)">【推荐】超50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://www.jdcloud.com/cn/activity/year-end?utm_source=DMT_cnblogs&amp;utm_medium=CH&amp;utm_campaign=q4vm&amp;utm_term=Virtual-Machines" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-京东云&#39;)">【活动】京东云服务器_云主机低于1折，低价高性能产品备战双11</a><br><a href="https://ke.qq.com/huodong/mashibing_pc/index.html?from=800018451" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-马士兵&#39;)">【培训】双十一大促，Java线下课程全免费！ 马士兵老师强势回归！</a><br><a href="https://www.ctyun.cn/activity/20191111?hmsr=%E7%9C%8B%E7%9C%8B-%E5%8D%9A%E5%AE%A2%E5%9B%AD-%E5%8F%8C11-1106&amp;hmpl=&amp;hmcu=&amp;hmkw=&amp;hmci=" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-天翼云&#39;)">【推荐】天翼云双十一翼降到底，云主机11.11元起，抽奖送大礼</a><br><a href="https://www.uibot.com.cn/sem/baidu16.html" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-UiBot&#39;)">【推荐】流程自动化专家UiBot，体系化教程成就高薪RPA工程师</a><br><a href="https://www.getui.com/2019devfest?f=5&amp;p=10&amp;c=15&amp;ch=1&amp;hmsr=%E5%8D%9A%E5%AE%A2%E5%9B%AD&amp;hmpl=2019%E5%BC%80%E5%8F%91%E8%80%85%E8%8A%82&amp;hmcu=PC&amp;hmkw=&amp;hmci=" target="_blank">【福利】个推四大热门移动开发SDK全部免费用一年，限时抢！</a><br><a href="http://click.aliyun.com/m/1000081987/" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云&#39;)">【推荐】阿里云双11冰点钜惠，热门产品低至一折等你来抢！</a><br></div>
+    <div id="opt_under_post"></div>
+    <script async="async" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/gpt.js.下载"></script>
+    <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+    </script>
+    <script>
+        googletag.cmd.push(function () {
+            googletag.defineSlot("/1090369/C1", [300, 250], "div-gpt-ad-1546353474406-0").addService(googletag.pubads());
+            googletag.defineSlot("/1090369/C2", [468, 60], "div-gpt-ad-1539008685004-0").addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1546353474406-0" style="height:250px; width:300px;"></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="协议森林08 不放弃 (TCP协议与流通信)" href="https://www.cnblogs.com/vamei/archive/2012/12/08/2805252.html" target="_blank" onclick="clickRecomItmem(2805252)">协议森林08 不放弃 (TCP协议与流通信)</a><br>·  <a title="协议森林12 天下为公 (TCP堵塞控制)" href="https://www.cnblogs.com/vamei/archive/2013/01/10/2850199.html" target="_blank" onclick="clickRecomItmem(2850199)">协议森林12 天下为公 (TCP堵塞控制)</a><br>·  <a title="协议森林10 魔鬼细节 (TCP滑窗管理)" href="https://www.cnblogs.com/vamei/archive/2012/12/18/2822739.html" target="_blank" onclick="clickRecomItmem(2822739)">协议森林10 魔鬼细节 (TCP滑窗管理)</a><br>·  <a title="网络拥塞控制(四) TCP拥塞控制的其他算法" href="https://www.cnblogs.com/fll/archive/2008/06/18/1225029.html" target="_blank" onclick="clickRecomItmem(1225029)">网络拥塞控制(四) TCP拥塞控制的其他算法</a><br>·  <a title="tcp窗口滑动以及拥塞控制" href="https://www.cnblogs.com/woaiyy/p/3554182.html" target="_blank" onclick="clickRecomItmem(3554182)">tcp窗口滑动以及拥塞控制</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/2824748">更多推荐...</a></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1539008685004-0" style="height:60px; width:468px;">
+            <script>
+                if (new Date() >= new Date(2018, 9, 13)) {
+                    googletag.cmd.push(function () { googletag.display("div-gpt-ad-1539008685004-0"); });
+                }
+            </script>
+        </div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·              <a href="https://news.cnblogs.com/n/647302/" target="_blank">1.8万余件！区块链专利中国申请量居全球第一</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647301/" target="_blank">腾讯云多款视频新品接口开放，开源资源助力开发者生态</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647300/" target="_blank">“旅行者2号”飞出太阳系后，这五件事你应该知道</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647299/" target="_blank">一夜之间，美国大量手机用户收到神秘短信：却是来自于2019情人节</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/647298/" target="_blank">谷歌与意大利电信达成数据中心合作</a>
+            <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+        deliverAdT2();
+        deliverAdC1();
+        deliverAdC2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div>    </div>
+</div>
+            </div>
+        </div>
+
+        <div id="sideBar">
+            <div id="sideBarMain">
+                
+<div id="sidebar_news" class="newsItem">
+<h3 class="catListTitle">公告</h3>
+
+<div id="blog-news">
+    <p>你好，这里是Vamei，一名编程爱好者。我在博客里写了<b>Python/Linux/网络协议/算法/Java/数据科学</b>系列文章，<a href="http://www.cnblogs.com/vamei/tag/%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95/">从这里开始阅读</a>。非常期待和你的交流。</p>
+<br>
+
+<p>编程相关出版作品：</p>
+<p><a href="https://book.douban.com/subject/30259573/">树莓派开始，玩转Linux</a></p>
+<p><a href="https://book.douban.com/subject/26919485/">从Python开始学编程</a></p>
+<p><a href="https://read.douban.com/column/1788114/">协议森林</a></p>
+
+<br>
+<p>其他作品：</p>
+<p><a href="https://read.douban.com/ebook/18808859/">现代小城的考古学家</a></p>
+<p><a href="http://read.douban.com/ebook/15504363/">天气与历史的相爱相杀</a></p>
+<p><a href="http://read.douban.com/ebook/11777134/">随手拍光影</a></p>
+
+<br>
+
+<a href="https://www.douban.com/people/ztftom/">我的豆瓣</a>
+<br>
+<br>
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/vamei/">
+            Vamei
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/vamei/" title="入园时间：2012-05-28">
+            7年5个月
+        </a>
+        <br>
+荣誉：                <a href="https://www.cnblogs.com/expert/">推荐博客</a>
+                <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/vamei/followers/">
+            9031
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/vamei/followees/">
+            27
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow(&#39;3faf47ff-9ea8-e111-aa3f-842b2b196315&#39;)">+加关注</a></div>
+        <script>getFollowStatus('3faf47ff-9ea8-e111-aa3f-842b2b196315');</script>
+    </div>
+</div></div>
+
+                <div id="calendar"><div id="blog-calendar" style="display:none"></div></div>                
+                <script>loadBlogDefaultCalendar();</script>
+                <div id="leftcontentcontainer">
+                    <!-- begin:SingleColumn -->
+                    <div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    
+</div>
+
+<!-- 常用链接 -->
+<div id="sidebar_shortcut" class="sidebar-block">
+    
+<h3 class="catListTitle">
+常用链接
+</h3>
+<ul>
+        <li>
+
+<a href="https://www.cnblogs.com/vamei/p/" title="我的博客的随笔列表">我的随笔</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/vamei/MyComments.html" title="我的发表过的评论列表">我的评论</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/vamei/OtherPosts.html" title="我评论过的随笔列表">我的参与</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/vamei/RecentComments.html" title="我的博客的评论列表">最新评论</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/vamei/tag/" title="我的博客的标签列表">我的标签</a>
+</li>
+</ul>
+
+<!-- TODO: 检查是否有使用这一部分的控件，如果没有则应该删除。 -->
+<div id="itemListLin_con" style="display:none">
+    <ul>
+
+    </ul>
+</div>
+
+</div>
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block">
+    
+<div class="catListTag">
+    <h3 class="catListTitle">我的标签</h3>
+    <ul>
+        
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/Python/">Python</a>(62)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/Java/">Java</a>(42)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/Linux/">Linux</a>(31)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E5%A4%A7%E6%95%B0%E6%8D%AE/">大数据</a>(24)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E7%BD%91%E7%BB%9C/">网络</a>(18)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E6%96%87%E9%9D%92/">文青</a>(17)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E7%AE%97%E6%B3%95/">算法</a>(15)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E6%8A%80%E6%99%AE/">技普</a>(9)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E7%B3%BB%E5%88%97%E7%B4%A2%E5%BC%95/">系列索引</a>(6)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/vamei/tag/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a>(4)
+        </li>
+            <li>
+                <a href="https://www.cnblogs.com/vamei/tag/">更多</a>
+            </li>
+
+    </ul>
+</div>
+
+</div>
+
+<!-- 积分与排名 -->
+<div id="sidebar_scorerank" class="sidebar-block">
+    
+<div class="catListBlogRank">
+    <h3 class="catListTitle">积分与排名</h3>
+    <ul>
+        <li class="liScore">
+            积分 - 
+755842
+        </li>
+        <li class="liRank">
+            排名 - 
+196
+        </li>
+    </ul>
+</div>
+</div>
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+        <div class="catList">
+            <h3 class="catListTitle">
+                
+
+系列文章
+
+
+
+            </h3>
+            <ul>
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/archive/2012/10/10/2718229.html" rel="" target="">
+    树莓派与Linux
+</a>
+
+                            
+
+                        </li>
+                        
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/archive/2012/09/13/2682778.html" rel="" target="">
+    Python快速教程
+</a>
+
+                            
+
+                        </li>
+                        
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/archive/2012/12/05/2802811.html" rel="" target="">
+    协议森林
+</a>
+
+                            
+
+                        </li>
+                        
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/archive/2013/03/22/2974052.html" rel="" target="">
+    纸上谈兵: 算法与数据结构
+</a>
+
+                            
+
+                        </li>
+                        
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/archive/2013/03/31/2991531.html" rel="" target="">
+    Java快速教程
+</a>
+
+                            
+
+                        </li>
+                        
+                        <li>
+                            
+<a href="http://www.cnblogs.com/vamei/p/3178534.html" rel="nofollow noopener noreferrer" target="">
+    数据科学
+</a>
+
+                            
+
+                        </li>
+                        
+            </ul>
+        </div>
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block">
+    <div id="recent_comments_wrap" class="RecentComment">
+    <h3 class="catListTitle">最新评论</h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/archive/2012/12/08/2805252.html#4418483">1. Re:协议森林08 不放弃 (TCP协议与流通信)</a></li>
+                    <li class="recent_comment_body">视频看不了，可以更新一下吗？</li>
+                    <li class="recent_comment_author">--妈妈我想谈恋爱</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4416125">2. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">R.I.P <br>抱歉以这样的形式认识你<br>祝你那边一切安好</li>
+                    <li class="recent_comment_author">--MrGSheep</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9329278.html#4412011">3. Re:Linux的内存分页管理</a></li>
+                    <li class="recent_comment_body">第一次看博主文章，清晰明了，很喜欢，激励自己好好钻研。<br>但，无意发现博主已在另维世界，愿一切都好。</li>
+                    <li class="recent_comment_author">--雪海缘</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4408915">4. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">R.I.P</li>
+                    <li class="recent_comment_author">--绯村剑心丶</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/archive/2012/07/10/2582787.html#4405892">5. Re:Python进阶08 异常处理</a></li>
+                    <li class="recent_comment_body">打卡</li>
+                    <li class="recent_comment_author">--upuil</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4405835">6. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">R.I.P</li>
+                    <li class="recent_comment_author">--ITryagain</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/archive/2012/06/06/2537436.html#4399844">7. Re:Python进阶01 词典</a></li>
+                    <li class="recent_comment_body">这下一章怎么前往呢？</li>
+                    <li class="recent_comment_author">--小嘿嘿嘿嘿</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9364382.html#4393733">8. Re:调度器简介，以及Linux的调度策略</a></li>
+                    <li class="recent_comment_body">寻影Vamei Vamei 2019-02-21 11:58:23远处的光臆造身前的影。影高而大，噬我，缠绕我，御我为奴。我与影欢歌。倏忽，光灭影消。黑漆漆的我，不知何处寻影。...</li>
+                    <li class="recent_comment_author">--81</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/archive/2012/06/02/2531515.html#4392546">9. Re:Python基础08 面向对象的基本概念</a></li>
+                    <li class="recent_comment_body">笛笛笛卫</li>
+                    <li class="recent_comment_author">--小嘿嘿嘿嘿</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4392485">10. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">谢谢，您曾经来过！</li>
+                    <li class="recent_comment_author">--EDUDATAMiner</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4389775">11. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">博主  一路走好  一定会好好学习你留下的知识</li>
+                    <li class="recent_comment_author">--白小白的日志</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/archive/2013/03/21/2964092.html#4389702">12. Re:纸上谈兵: AVL树</a></li>
+                    <li class="recent_comment_body">ACL性质是什么？</li>
+                    <li class="recent_comment_author">--谢绝围观</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4383332">13. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">前一刻还在看AI养猪，后一刻看到评论心都凉了</li>
+                    <li class="recent_comment_author">--chauncy.D</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4380586">14. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">在其他论坛中知道了这个博客，感谢楼主的分享，人虽离去，但分享的知识仍然在影响着，一路走好</li>
+                    <li class="recent_comment_author">--白氪</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/vamei/p/9496012.html#4373026">15. Re:一个程序员被骗去养猪</a></li>
+                    <li class="recent_comment_body">R.I.P</li>
+                    <li class="recent_comment_author">--Gyyyang</li>
+        </ul>
+    </div>
+</div>
+</div>
+
+
+
+<!-- 阅读排行榜 -->
+
+
+<!-- 评论排行榜 -->
+
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/p/3480994.html">
+                                1. “不给力啊，老湿！”：RSA加密与破解(231)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/09/13/2682778.html">
+                                2. Python快速教程(192)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2013/03/31/2991531.html">
+                                3. Java快速教程(118)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/p/5310829.html">
+                                4. 野蛮生长又五年(109)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/11/24/2773967.html">
+                                5. 协议森林01 邮差与邮局 (网络协议概观)(103)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/p/9496012.html">
+                                6. 一个程序员被骗去养猪(93)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/11/17/2774208.html">
+                                7. 为什么要写技术博(85)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/p/3923128.html">
+                                8. 编程异闻录(63)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/12/05/2802811.html">
+                                9. 协议森林(58)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2013/03/14/2958654.html">
+                                10. Java基础01 从HelloWorld到面向对象(52)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2013/06/01/3109836.html">
+                                11. 博客一年: 心理之旅(52)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/12/08/2805252.html">
+                                12. 协议森林08 不放弃 (TCP协议与流通信)(51)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/p/3603046.html">
+                                13. Python快速教程 尾声(50)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2012/06/02/2531515.html">
+                                14. Python基础08 面向对象的基本概念(49)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/vamei/archive/2013/02/06/2892628.html">
+                                15. Python简史(47)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script>
+                    <!-- end:  SingleColumn -->
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="clear"></div>
+    <div id="footer">
+        <!--done-->
+Copyright © 2019 Vamei
+<br><span id="poweredby">Powered by .NET Core 3.0.0 on Linux</span>
+
+    </div>
+</div>
+
+    <div id="page_end_html">
+        <!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=9614694; 
+var sc_invisible=0; 
+var sc_security="a8f51f45"; 
+var scJsHost = (("https:" == document.location.protocol) ?
+"https://secure." : "http://www.");
+document.write("<sc"+"ript type='text/javascript' src='" +
+scJsHost+
+"statcounter.com/counter/counter.js'></"+"script>");
+</script><script type="text/javascript" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/counter.js.下载"></script><span class="statcounter"><a class="statcounter" href="http://www.statcounter.com/" target="_blank"><img src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/t.php" alt="StatCounter - Free Web Tracker and Counter" border="0"></a></span>
+
+<noscript><div class="statcounter"><a title="website
+statistics" href="http://statcounter.com/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/9614694/0/a8f51f45/0/"
+alt="website statistics"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+    </div>
+
+
+<iframe id="blockbyte-bs-sidebar" class="notranslate" data-pos="left" src="./协议森林11 涅槃 (TCP重新发送) - Vamei - 博客园_files/saved_resource.html"></iframe><div id="blockbyte-bs-indicator" class="blockbyte-bs-fullHeight blockbyte-bs-visible" data-pos="left" style="width: 1px; height: 100%; top: 0%;"><div><span></span></div></div></body></html>
