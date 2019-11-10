@@ -21,5 +21,6 @@ HighQualityDocuments
 #### 3、2019-11-10
    * 增加对 MTU 和 MSS 作用范围的 visio 文档。
    * UDP协议。
+   * HTTP协议。
 
 （ 完 ）
