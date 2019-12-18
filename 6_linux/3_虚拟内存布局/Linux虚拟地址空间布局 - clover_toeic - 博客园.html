@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)https://www.cnblogs.com/clover-toeic/p/3754433.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen"></style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}</style><style class="darkreader darkreader--user-agent" media="screen">html {
+    background-color: #181a1b !important;
+}
+html, body, input, textarea, select, button {
+    background-color: #181a1b;
+}
+html, body, input, textarea, select, button {
+    border-color: #575757;
+    color: #e8e6e3;
+}
+a {
+    color: #3391ff;
+}
+table {
+    border-color: #4c4c4c;
+}
+::placeholder {
+    color: #bab5ab;
+}
+::selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+::-moz-selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #545b00 !important;
+    color: #e8e6e3 !important;
+}
+::-webkit-scrollbar {
+    background-color: #1c1e1f;
+    color: #c5c1b9;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2a2c2e;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #323537;
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: #3d4043;
+}
+::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+* {
+    scrollbar-color: #2a2c2e #1c1e1f;
+}</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="在多任务操作系统中，每个进程都运行在属于自己的内存沙盘中。这个沙盘就是虚拟地址空间(Virtual Address Space)，在32位模式下它是一个4GB的内存地址块。在Linux系统中, 内核进">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Linux虚拟地址空间布局 - clover_toeic - 博客园</title>
+    
+    <link rel="stylesheet" href="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/blog-common.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    <link id="MainCss" rel="stylesheet" href="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/bundle-coffee.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    <link type="text/css" rel="stylesheet" href="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/custom.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/bundle-coffee-mobile.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/clover-toeic/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/clover-toeic/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/clover-toeic/wlwmanifest.xml">
+    <script async="" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/analytics.js.下载"></script><script src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/jquery-2.2.0.min.js.下载"></script><style class="darkreader darkreader--override" media="screen">.jfk-bubble {
+    background-color: #000000 !important;
+}
+.vimvixen-hint {
+    background-color: #7b5300 !important;
+    border-color: #d8b013 !important;
+    color: #f3e8c8 !important;
+}</style><style type="text/css" abt="234"></style><style class="darkreader darkreader--sync" media="screen"></style>
+    <script src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/blog-common.min.js.下载"></script>
+    <script>
+        var currentBlogId = 185661;
+        var currentBlogApp = 'clover-toeic';
+        var cb_enable_mathjax = true;
+        var isLogined = true;
+    </script>
+    <script type="text/x-mathjax-config;executed=true">
+        MathJax.Hub.Config({
+        tex2jax: { inlineMath: [['$','$'], ['\\(','\\)']], processClass: 'math', processEscapes: true },
+        TeX: {
+        equationNumbers: { autoNumber: ['AMS'], useLabelIds: true },
+        extensions: ['extpfeil.js', 'mediawiki-texvc.js'],
+        Macros: {bm: "\\boldsymbol"}
+        },
+        'HTML-CSS': { linebreaks: { automatic: true } },
+        SVG: { linebreaks: { automatic: true } }
+        });
+    </script>
+    <script src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/MathJax.js.下载"></script>
+    
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style class="darkreader darkreader--sync" media="screen"></style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover, .MJXp-munder {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > *, .MJXp-munder > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style><style class="darkreader darkreader--sync" media="screen"></style><script>//remove baidu search ad
+var _countAA = 0
+function doBBBd(){
+    var alla = document.getElementsByTagName('a')
+    for(var i = 0; i < alla.length; i++){
+        if(/baidu.com\/(baidu.php\?url=|adrc.php\?t)/.test(alla[i].href)){
+            var _temp = alla[i].parentElement, loop = 0
+            while(loop < 5){
+                _temp = _temp.parentElement
+                loop++
+                if(_temp.parentElement.id == 'content_left'){
+                    _temp.remove()
+                    break
+                }
+            }
+        }
+    }
+    
+    if(_countAA++ < 20){
+        setTimeout(doBBBd, 500)
+    }
+    
+}
+doBBBd()
+document.addEventListener('keyup', function(){_countAA-=10;doBBBd()}, false)
+document.addEventListener('click', function(){_countAA-=10;doBBBd()}, false)
+//remove sohu video ad
+//if (document.URL.indexOf("tv.sohu.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+//remove 56.com video ad
+//if (document.URL.indexOf("56.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+</script></head>
+<body><div id="MathJax_Message" style="display: none;"></div>
+    <a name="top"></a>
+    
+    
+<!--done-->
+<div id="home">
+<div id="header">
+	<div id="blogTitle">
+	<a href="https://www.cnblogs.com/clover-toeic/"><img id="blogLogo" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/logo.gif" alt="返回主页"></a>			
+		
+<!--done-->
+<h1><a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/clover-toeic/">clover_toeic</a>
+</h1>
+<h2>
+
+</h2>
+
+
+
+
+		
+	</div><!--end: blogTitle 博客的标题和副标题 -->
+</div><!--end: header 头部 -->
+
+<div id="main">
+	<div id="mainContent">
+	<div class="forFlow">
+		<div id="navigator">
+			
+<ul id="navList">
+	<li><a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+</li>
+	<li>
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/clover-toeic/">
+首页</a>
+</li>
+	<li>
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+</li>
+	<li>
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/clover_toeic">
+联系</a></li>
+	<li>
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+</li>
+	<li>
+<a id="blog_nav_rss" class="menu" href="https://www.cnblogs.com/clover-toeic/rss/">
+订阅</a>
+	
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/clover-toeic/rss/">
+    <img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/xml.gif" alt="订阅">
+</a></li>
+</ul>
+
+
+
+			<div class="blogStats">
+				
+				<!--done-->
+随笔- 
+91&nbsp;
+文章- 
+0&nbsp;
+评论- 
+143&nbsp;
+
+
+
+				
+			</div><!--end: blogStats -->
+		</div><!--end: navigator 博客导航栏 -->
+		<div id="post_detail">
+<!--done-->
+<div id="topics">
+	<div class="post">
+		<h1 class="postTitle">
+			
+<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/clover-toeic/p/3754433.html">Linux虚拟地址空间布局</a>
+
+		</h1>
+		<div class="clear"></div>
+		<div class="postBody">
+			
+<div id="cnblogs_post_body" class="blogpost-body ">
+    <p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;在多任务操作系统中，每个进程都运行在属于自己的内存沙盘中。这个沙盘就是虚拟地址空间(Virtual Address Space)，在32位模式下它是一个4GB的内存地址块。在Linux系统中, 内核进程和用户进程所占的虚拟内存比例是1:3，而Windows系统为2:2(通过设置Large-Address-Aware Executables标志也可为1:3)。这并不意味着内核使用那么多物理内存，仅表示它可支配这部分地址空间，根据需要将其映射到物理内存。</p>
+<p>&nbsp; &nbsp; &nbsp;虚拟地址通过页表(Page Table)映射到物理内存，页表由操作系统维护并被处理器引用。内核空间在页表中拥有较高特权级，因此用户态程序试图访问这些页时会导致一个页错误(page fault)。在Linux中，内核空间是持续存在的，并且在所有进程中都映射到同样的物理内存。内核代码和数据总是可寻址，随时准备处理中断和系统调用。与此相反，用户模式地址空间的映射随进程切换的发生而不断变化。</p>
+<p>&nbsp; &nbsp; &nbsp;Linux进程在虚拟内存中的标准内存段布局如下图所示：</p>
+<p style="text-align: center;"><img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/270929306664122.jpg" alt="" width="937" height="540"></p>
+<p>&nbsp; &nbsp; &nbsp;其中，用户地址空间中的蓝色条带对应于映射到物理内存的不同内存段，灰白区域表示未映射的部分。这些段只是简单的内存地址范围，与Intel处理器的段没有关系。</p>
+<p>&nbsp; &nbsp; &nbsp;上图中Random stack offset和Random mmap offset等随机值意在防止恶意程序。Linux通过对栈、内存映射段、堆的起始地址加上随机偏移量来打乱布局，以免恶意程序通过计算访问栈、库函数等地址。execve(2)负责为进程代码段和数据段建立映射，真正将代码段和数据段的内容读入内存是由系统的缺页异常处理程序按需完成的。另外，execve(2)还会将BSS段清零。</p>
+<p>&nbsp; &nbsp; &nbsp;用户进程部分分段存储内容如下表所示(按地址递减顺序)：</p>
+<table style="margin-left: auto; margin-right: auto;" border="1" cellspacing="0" cellpadding="0">
+<tbody>
+<tr style="background-color: rgb(139, 118, 116); --darkreader-inline-bgcolor:#404447;" data-darkreader-inline-bgcolor="">
+<td width="95">
+<p align="center"><strong>名称</strong></p>
+</td>
+<td width="496">
+<p align="center"><strong>存储内容</strong></p>
+</td>
+</tr>
+<tr>
+<td width="95">
+<p align="center">栈</p>
+</td>
+<td width="496">
+<p align="left">局部变量、函数参数、返回地址等</p>
+</td>
+</tr>
+<tr>
+<td width="95">
+<p align="center">堆</p>
+</td>
+<td width="496">
+<p align="left">动态分配的内存</p>
+</td>
+</tr>
+<tr>
+<td width="95">
+<p align="center">BSS段</p>
+</td>
+<td width="496">
+<p align="left">未初始化或初值为0的全局变量和静态局部变量</p>
+</td>
+</tr>
+<tr>
+<td width="95">
+<p align="center">数据段</p>
+</td>
+<td width="496">
+<p align="left">已初始化且初值非0的全局变量和静态局部变量</p>
+</td>
+</tr>
+<tr>
+<td width="95">
+<p align="center">代码段</p>
+</td>
+<td width="496">
+<p align="left">可执行代码、字符串字面值、只读变量</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp; &nbsp; &nbsp;在将应用程序加载到内存空间执行时，操作系统负责代码段、数据段和BSS段的加载，并在内存中为这些段分配空间。栈也由操作系统分配和管理；堆由程序员自己管理，即显式地申请和释放空间。</p>
+<p>&nbsp; &nbsp; &nbsp;BSS段、数据段和代码段是可执行程序编译时的分段，运行时还需要栈和堆。</p>
+<p>&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;以下详细介绍各个分段的含义。</p>
+<p>&nbsp;</p>
+<h1><span style="font-size: 16px;">1 内核空间</span></h1>
+<p>&nbsp; &nbsp; &nbsp;内核总是驻留在内存中，是操作系统的一部分。内核空间为内核保留，不允许应用程序读写该区域的内容或直接调用内核代码定义的函数。</p>
+<p>&nbsp;</p>
+<h1><span style="font-size: 16px;">2 栈(stack)</span></h1>
+<p>&nbsp; &nbsp; &nbsp;栈又称堆栈，由编译器自动分配释放，行为类似数据结构中的栈(先进后出)。堆栈主要有三个用途：</p>
+<ul>
+<li>为函数内部声明的非静态局部变量(C语言中称“自动变量”)提供存储空间。</li>
+<li>记录函数调用过程相关的维护性信息，称为栈帧(Stack Frame)或过程活动记录(Procedure Activation Record)。它包括函数返回地址，不适合装入寄存器的函数参数及一些寄存器值的保存。除递归调用外，堆栈并非必需。因为编译时可获知局部变量，参数和返回地址所需空间，并将其分配于BSS段。</li>
+<li>临时存储区，用于暂存长算术表达式部分计算结果或alloca()函数分配的栈内内存。</li>
+</ul>
+<p>&nbsp; &nbsp; &nbsp;持续地重用栈空间有助于使活跃的栈内存保持在CPU缓存中，从而加速访问。进程中的每个线程都有属于自己的栈。向栈中不断压入数据时，若超出其容量就会耗尽栈对应的内存区域，从而触发一个页错误。此时若栈的大小低于堆栈最大值RLIMIT_STACK(通常是8M)，则栈会动态增长，程序继续运行。映射的栈区扩展到所需大小后，不再收缩。</p>
+<p>&nbsp; &nbsp; &nbsp;Linux中ulimit -s命令可查看和设置堆栈最大值，当程序使用的堆栈超过该值时, 发生栈溢出(Stack Overflow)，程序收到一个段错误(Segmentation Fault)。注意，调高堆栈容量可能会增加内存开销和启动时间。</p>
+<p>&nbsp; &nbsp; &nbsp;堆栈既可向下增长(向内存低地址)也可向上增长, 这依赖于具体的实现。本文所述堆栈向下增长。</p>
+<p>&nbsp; &nbsp; &nbsp;堆栈的大小在运行时由内核动态调整。</p>
+<p>&nbsp;</p>
+<h1><span style="font-size: 16px;">3 内存映射段(mmap)</span></h1>
+<p>&nbsp; &nbsp; &nbsp;此处，内核将硬盘文件的内容直接映射到内存, 任何应用程序都可通过Linux的mmap()系统调用或Windows的CreateFileMapping()/MapViewOfFile()请求这种映射。内存映射是一种方便高效的文件I/O方式， 因而被用于装载动态共享库。用户也可创建匿名内存映射，该映射没有对应的文件, 可用于存放程序数据。在 Linux中，若通过malloc()请求一大块内存，C运行库将创建一个匿名内存映射，而不使用堆内存。”大块” 意味着比阈值 MMAP_THRESHOLD还大，缺省为128KB，可通过mallopt()调整。</p>
+<p>&nbsp; &nbsp; &nbsp;该区域用于映射可执行文件用到的动态链接库。在Linux 2.4版本中，若可执行文件依赖共享库，则系统会为这些动态库在从0x40000000开始的地址分配相应空间，并在程序装载时将其载入到该空间。在Linux 2.6内核中，共享库的起始地址被往上移动至更靠近栈区的位置。</p>
+<p>&nbsp; &nbsp; &nbsp;从进程地址空间的布局可以看到，在有共享库的情况下，留给堆的可用空间还有两处：一处是从.bss段到0x40000000，约不到1GB的空间；另一处是从共享库到栈之间的空间，约不到2GB。这两块空间大小取决于栈、共享库的大小和数量。这样来看，是否应用程序可申请的最大堆空间只有2GB？事实上，这与Linux内核版本有关。在上面给出的进程地址空间经典布局图中，共享库的装载地址为0x40000000，这实际上是Linux kernel 2.6版本之前的情况了，在2.6版本里，共享库的装载地址已经被挪到靠近栈的位置，即位于0xBFxxxxxx附近，因此，此时的堆范围就不会被共享库分割成2个“碎片”，故kernel 2.6的32位Linux系统中，malloc申请的最大内存理论值在2.9GB左右。</p>
+<p>&nbsp;</p>
+<h1><span style="font-size: 16px;">4 堆(heap)</span></h1>
+<p>&nbsp; &nbsp; &nbsp;堆用于存放进程运行时动态分配的内存段，可动态扩张或缩减。堆中内容是匿名的，不能按名字直接访问，只能通过指针间接访问。当进程调用malloc(C)/new(C++)等函数分配内存时，新分配的内存动态添加到堆上(扩张)；当调用free(C)/delete(C++)等函数释放内存时，被释放的内存从堆中剔除(缩减)&nbsp;。</p>
+<p>&nbsp; &nbsp; &nbsp;分配的堆内存是经过字节对齐的空间，以适合原子操作。堆管理器通过链表管理每个申请的内存，由于堆申请和释放是无序的，最终会产生内存碎片。堆内存一般由应用程序分配释放，回收的内存可供重新使用。若程序员不释放，程序结束时操作系统可能会自动回收。</p>
+<p>&nbsp; &nbsp; &nbsp;堆的末端由break指针标识，当堆管理器需要更多内存时，可通过系统调用brk()和sbrk()来移动break指针以扩张堆，一般由系统自动调用。</p>
+<p>&nbsp; &nbsp; &nbsp;使用堆时经常出现两种问题：1) 释放或改写仍在使用的内存(“内存破坏”)；2)未释放不再使用的内存(“内存泄漏”)。当释放次数少于申请次数时，可能已造成内存泄漏。泄漏的内存往往比忘记释放的数据结构更大，因为所分配的内存通常会圆整为下个大于申请数量的2的幂次(如申请212B，会圆整为256B)。</p>
+<p>&nbsp; &nbsp; &nbsp;注意，堆不同于数据结构中的”堆”，其行为类似链表。</p>
+<table style="margin-left: auto; margin-right: auto;" border="0">
+<tbody>
+<tr style="background-color: rgb(189, 183, 107); --darkreader-inline-bgcolor:#615d2b;" data-darkreader-inline-bgcolor="">
+<td>
+<p>【扩展阅读】<strong>栈和堆的区别</strong></p>
+<p>①<strong>管理方式</strong>：栈由编译器自动管理；堆由程序员控制，使用方便，但易产生内存泄露。</p>
+<p>②<strong>生长方向</strong>：栈向低地址扩展(即”向下生长”)，是连续的内存区域；堆向高地址扩展(即”向上生长”)，是不连续的内存区域。这是由于系统用链表来存储空闲内存地址，自然不连续，而链表从低地址向高地址遍历。</p>
+<p>③<strong>空间大小</strong>：栈顶地址和栈的最大容量由系统预先规定(通常默认2M或10M)；堆的大小则受限于计算机系统中有效的虚拟内存，32位Linux系统中堆内存可达2.9G空间。</p>
+<p>④<strong>存储内容</strong>：栈在函数调用时，首先压入主调函数中下条指令(函数调用语句的下条可执行语句)的地址，然后是函数实参，然后是被调函数的局部变量。本次调用结束后，局部变量先出栈，然后是参数，最后栈顶指针指向最开始存的指令地址，程序由该点继续运行下条可执行语句。堆通常在头部用一个字节存放其大小，堆用于存储生存期与函数调用无关的数据，具体内容由程序员安排。</p>
+<p>⑤<strong>分配方式</strong>：栈可静态分配或动态分配。静态分配由编译器完成，如局部变量的分配。动态分配由alloca函数在栈上申请空间，用完后自动释放。堆只能动态分配且手工释放。</p>
+<p>⑥<strong>分配效率</strong>：栈由计算机底层提供支持：分配专门的寄存器存放栈地址，压栈出栈由专门的指令执行，因此效率较高。堆由函数库提供，机制复杂，效率比栈低得多。Windows系统中VirtualAlloc可直接在进程地址空间中分配一块内存，快速且灵活。</p>
+<p>⑦<strong>分配</strong><strong>后系统响应</strong>：只要栈剩余空间大于所申请空间，系统将为程序提供内存，否则报告异常提示栈溢出。</p>
+<p>&nbsp; &nbsp; &nbsp;操作系统为堆维护一个记录空闲内存地址的链表。当系统收到程序的内存分配申请时，会遍历该链表寻找第一个空间大于所申请空间的堆结点，然后将该结点从空闲结点链表中删除，并将该结点空间分配给程序。若无足够大小的空间(可能由于内存碎片太多)，有可能调用系统功能去增加程序数据段的内存空间，以便有机会分到足够大小的内存，然后进行返回。，大多数系统会在该内存空间首地址处记录本次分配的内存大小，供后续的释放函数(如free/delete)正确释放本内存空间。</p>
+<p>&nbsp; &nbsp; &nbsp;此外，由于找到的堆结点大小不一定正好等于申请的大小，系统会自动将多余的部分重新放入空闲链表中。</p>
+<p>⑧<strong>碎片问题</strong>：栈不会存在碎片问题，因为栈是先进后出的队列，内存块弹出栈之前，在其上面的后进的栈内容已弹出。而频繁申请释放操作会造成堆内存空间的不连续，从而造成大量碎片，使程序效率降低。</p>
+<p>&nbsp; &nbsp; &nbsp;可见，堆容易造成内存碎片；由于没有专门的系统支持，效率很低；由于可能引发用户态和内核态切换，内存申请的代价更为昂贵。所以栈在程序中应用最广泛，函数调用也利用栈来完成，调用过程中的参数、返回地址、栈基指针和局部变量等都采用栈的方式存放。所以，建议尽量使用栈，仅在分配大量或大块内存空间时使用堆。</p>
+<p>&nbsp; &nbsp; &nbsp;使用栈和堆时应避免越界发生，否则可能程序崩溃或破坏程序堆、栈结构，产生意想不到的后果。</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<h1><span style="font-size: 16px;">5 BSS段</span></h1>
+<p>&nbsp; &nbsp; &nbsp;BSS(Block Started by Symbol)段中通常存放程序中以下符号：</p>
+<ul>
+<li>未初始化的全局变量和静态局部变量</li>
+<li>初始值为0的全局变量和静态局部变量(依赖于编译器实现)</li>
+<li>未定义且初值不为0的符号(该初值即common block的大小)</li>
+</ul>
+<p>&nbsp; &nbsp; &nbsp;C语言中，未显式初始化的静态分配变量被初始化为0(算术类型)或空指针(指针类型)。由于程序加载时，BSS会被操作系统清零，所以未赋初值或初值为0的全局变量都在BSS中。BSS段仅为未初始化的静态分配变量预留位置，在目标文件中并不占据空间，这样可减少目标文件体积。但程序运行时需为变量分配内存空间，故目标文件必须记录所有未初始化的静态分配变量大小总和(通过start_bss和end_bss地址写入机器代码)。当加载器(loader)加载程序时，将为BSS段分配的内存初始化为0。在嵌入式软件中，进入main()函数之前BSS段被C运行时系统映射到初始化为全零的内存(效率较高)。</p>
+<p>&nbsp; &nbsp; &nbsp;注意，尽管均放置于BSS段，但初值为0的全局变量是强符号，而未初始化的全局变量是弱符号。若其他地方已定义同名的强符号(初值可能非0)，则弱符号与之链接时不会引起重定义错误，但运行时的初值可能并非期望值(会被强符号覆盖)。因此，定义全局变量时，若只有本文件使用，则尽量使用static关键字修饰；否则需要为全局变量定义赋初值(哪怕0值)，保证该变量为强符号，以便链接时发现变量名冲突，而不是被未知值覆盖。</p>
+<p>&nbsp; &nbsp; &nbsp;某些编译器将未初始化的全局变量保存在common段，链接时再将其放入BSS段。在编译阶段可通过-fno-common选项来禁止将未初始化的全局变量放入common段。</p>
+<p>&nbsp; &nbsp; &nbsp;此外，由于目标文件不含BSS段，故程序烧入存储器(Flash)后BSS段地址空间内容未知。U-Boot启动过程中<a href="http://blog.csdn.net/king_bingge/article/details/8741987">，</a>将U-Boot的Stage2代码(通常位于lib_xxxx/board.c文件)搬迁(拷贝)到SDRAM空间后必须人为添加清零BSS段的代码，而不可依赖于Stage2代码中变量定义时赋0值。</p>
+<table style="width: 100%; margin-left: auto; margin-right: auto;" cellspacing="0" cellpadding="0">
+<tbody>
+<tr style="background-color: rgb(189, 183, 107); --darkreader-inline-bgcolor:#615d2b;" data-darkreader-inline-bgcolor="">
+<td>
+<div>
+<p>【扩展阅读】<strong>BSS</strong><strong>历史</strong></p>
+<p>&nbsp; &nbsp; &nbsp;BSS(Block Started by Symbol，以符号开始的块)一词最初是UA-SAP汇编器(United Aircraft Symbolic Assembly Program)中的伪指令，用于为符号预留一块内存空间。该汇编器由美国联合航空公司于20世纪50年代中期为IBM 704大型机所开发。</p>
+<p>&nbsp; &nbsp; &nbsp;后来该词被作为关键字引入到了IBM 709和7090/94机型上的标准汇编器FAP(Fortran Assembly Program)，用于定义符号并且为该符号预留指定字数的未初始化空间块。</p>
+<p>&nbsp; &nbsp; &nbsp;在采用段式内存管理的架构中(如Intel 80x86系统)，BSS段通常指用来存放程序中未初始化全局变量的一块内存区域，该段变量只有名称和大小却没有值。程序开始时由系统初始化清零。</p>
+<p>&nbsp; &nbsp; &nbsp;BSS段不包含数据，仅维护开始和结束地址，以便内存能在运行时被有效地清零。BSS所需的运行时空间由目标文件记录，但BSS并不占用目标文件内的实际空间，即BSS节段应用程序的二进制映象文件中并不存在。</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<h2>&nbsp;</h2>
+<h1><span style="font-size: 16px;">6 数据段(Data)</span></h1>
+<p>&nbsp; &nbsp; &nbsp;数据段通常用于存放程序中已初始化且初值不为0的全局变量和静态局部变量。数据段属于静态内存分配(静态存储区)，可读可写。</p>
+<p>&nbsp; &nbsp; &nbsp;数据段保存在目标文件中(在嵌入式系统里一般固化在镜像文件中)，其内容由程序初始化。例如，对于全局变量int gVar = 10，必须在目标文件数据段中保存10这个数据，然后在程序加载时复制到相应的内存。</p>
+<p>&nbsp; &nbsp; &nbsp;数据段与BSS段的区别如下：&nbsp;</p>
+<p>&nbsp; &nbsp; &nbsp;1) BSS段不占用物理文件尺寸，但占用内存空间；数据段占用物理文件，也占用内存空间。</p>
+<p>&nbsp; &nbsp; &nbsp;对于大型数组如int ar0[10000] = {1, 2, 3, ...}和int ar1[10000]，ar1放在BSS段，只记录共有10000*4个字节需要初始化为0，而不是像ar0那样记录每个数据1、2、3...，此时BSS为目标文件所节省的磁盘空间相当可观。</p>
+<p>&nbsp; &nbsp; &nbsp;2) 当程序读取数据段的数据时，系统会出发缺页故障，从而分配相应的物理内存；当程序读取BSS段的数据时，内核会将其转到一个全零页面，不会发生缺页故障，也不会为其分配相应的物理内存。</p>
+<p>&nbsp; &nbsp; &nbsp;运行时数据段和BSS段的整个区段通常称为数据区。某些资料中“数据段”指代数据段 + BSS段 + 堆。</p>
+<h2>&nbsp;</h2>
+<h1><span style="font-size: 16px;">7 代码段(text)</span></h1>
+<p>&nbsp; &nbsp; &nbsp;代码段也称正文段或文本段，通常用于存放程序执行代码(即CPU执行的机器指令)。一般C语言执行语句都编译成机器代码保存在代码段。通常代码段是可共享的，因此频繁执行的程序只需要在内存中拥有一份拷贝即可。代码段通常属于只读，以防止其他程序意外地修改其指令(对该段的写操作将导致段错误)。某些架构也允许代码段为可写，即允许修改程序。</p>
+<p>&nbsp; &nbsp; &nbsp;代码段指令根据程序设计流程依次执行，对于顺序指令，只会执行一次(每个进程)；若有反复，则需使用跳转指令；若进行递归，则需要借助栈来实现。</p>
+<p>&nbsp; &nbsp; &nbsp;代码段指令中包括操作码和操作对象(或对象地址引用)。若操作对象是立即数(具体数值)，将直接包含在代码中；若是局部数据，将在栈区分配空间，然后引用该数据地址；若位于BSS段和数据段，同样引用该数据地址。</p>
+<p>&nbsp; &nbsp; &nbsp;代码段最容易受优化措施影响。</p>
+<h2>&nbsp;</h2>
+<h1><span style="font-size: 16px;">8 保留区</span></h1>
+<p>&nbsp; &nbsp; &nbsp;位于虚拟地址空间的最低部分，未赋予物理地址。任何对它的引用都是非法的，用于捕捉使用空指针和小整型值指针引用内存的异常情况。</p>
+<p>&nbsp; &nbsp; &nbsp;它并不是一个单一的内存区域，而是对地址空间中受到操作系统保护而禁止用户进程访问的地址区域的总称。大多数操作系统中，极小的地址通常都是不允许访问的，如NULL。C语言将无效指针赋值为0也是出于这种考虑，因为0地址上正常情况下不会存放有效的可访问数据。</p>
+<p>&nbsp; &nbsp; &nbsp;在32位X86架构的Linux系统中，用户进程可执行程序一般从虚拟地址空间0x08048000开始加载。该加载地址由ELF文件头决定，可通过自定义链接器脚本覆盖链接器默认配置，进而修改加载地址。0x08048000以下的地址空间通常由C动态链接库、动态加载器ld.so和内核VDSO(内核提供的虚拟共享库)等占用。通过使用mmap系统调用，可访问0x08048000以下的地址空间。</p>
+<p>&nbsp; &nbsp; &nbsp;通过cat /proc/self/maps命令查看加载表如下：</p>
+<p align="center"><img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/270942050097733.jpg" alt="" width="498" height="191">&nbsp;</p>
+<table style="width: 100%; margin-left: auto; margin-right: auto;" cellspacing="0" cellpadding="0">
+<tbody>
+<tr style="background-color: rgb(189, 183, 107); --darkreader-inline-bgcolor:#615d2b;" data-darkreader-inline-bgcolor="">
+<td>
+<div>
+<p>【扩展阅读】<strong>分段的好处</strong></p>
+<p>&nbsp; &nbsp; &nbsp;进程运行过程中，代码指令根据流程依次执行，只需访问一次(当然跳转和递归可能使代码执行多次)；而数据(数据段和BSS段)通常需要访问多次，因此单独开辟空间以方便访问和节约空间。具体解释如下：</p>
+<p>&nbsp; &nbsp; &nbsp;当程序被装载后，数据和指令分别映射到两个虚存区域。数据区对于进程而言可读写，而指令区对于进程只读。两区的权限可分别设置为可读写和只读。以防止程序指令被有意或无意地改写。</p>
+<p>&nbsp; &nbsp; &nbsp;现代CPU具有极为强大的缓存(Cache)体系，程序必须尽量提高缓存命中率。指令区和数据区的分离有利于提高程序的局部性。现代CPU一般数据缓存和指令缓存分离，故程序的指令和数据分开存放有利于提高CPU缓存命中率。</p>
+<p>&nbsp; &nbsp; &nbsp;当系统中运行多个该程序的副本时，其指令相同，故内存中只须保存一份该程序的指令部分。若系统中运行数百进程，通过共享指令将节省大量空间(尤其对于有动态链接的系统)。其他只读数据如程序里的图标、图片、文本等资源也可共享。而每个副本进程的数据区域不同，它们是进程私有的。</p>
+<p>&nbsp; &nbsp; &nbsp;此外，临时数据及需要再次使用的代码在运行时放入栈区中，生命周期短。全局数据和静态数据可能在整个程序执行过程中都需要访问，因此单独存储管理。堆区由用户自由分配，以便管理。</p>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/clover-toeic/category/579078.html" target="_blank">语言知识</a></div>
+
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg" onclick="DiggIt(3754433,cb_blogId,1);green_channel_success(this,&#39;谢谢推荐！&#39;);">好文要顶</a>
+        <a id="green_channel_follow" onclick="follow(&#39;b6689109-c220-e311-8d02-90b11c0b17d6&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/clover-toeic/" target="_blank"><img src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/20140515221533.png" class="author_avatar" alt=""></a>
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/clover-toeic/">clover_toeic</a><br>
+            <a href="https://home.cnblogs.com/u/clover-toeic/followees/">关注 - 15</a><br>
+            <a href="https://home.cnblogs.com/u/clover-toeic/followers/">粉丝 - 277</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;b6689109-c220-e311-8d02-90b11c0b17d6&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(3754433,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">27</span>
+    </div>
+    <div class="buryit" onclick="votePost(3754433,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">1</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 0;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/clover-toeic/p/3745192.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/clover-toeic/p/3745192.html" title="发布于 2014-05-22 15:06">终端调测命令易用性的改进</a>
+    <br>
+    <a href="https://www.cnblogs.com/clover-toeic/p/3755066.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/clover-toeic/p/3755066.html" title="发布于 2014-05-27 14:35">C语言变量的存储布局</a>
+
+</div>
+</div>
+		</div>
+		<div class="postDesc">posted @ 
+<span id="post-date">2014-05-27 09:44</span>&nbsp;
+<a href="https://www.cnblogs.com/clover-toeic/">clover_toeic</a>&nbsp;
+阅读(<span id="post_view_count">23906</span>)&nbsp;
+评论(<span id="post_comment_count">7</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=3754433" rel="nofollow">
+    编辑
+</a>
+<a href="javascript:void(0)" onclick="AddToWz(3754433);return false;">收藏</a></div>
+	</div>
+	
+	
+</div><!--end: topics 文章、评论容器-->
+<script src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/highlight.min.js.下载"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 185661, cb_blogApp = 'clover-toeic', cb_blogUserGuid = 'b6689109-c220-e311-8d02-90b11c0b17d6';
+    var cb_entryId = 3754433, cb_entryCreatedDate = '2014-05-27 09:44', cb_postType = 1; 
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder">
+
+<div id="comment_pager_top">
+    
+</div>
+
+<!--done-->
+<br>
+<div class="feedback_area_title">评论</div>
+<div class="feedbackNoItems"><div class="feedbackNoItems"></div></div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2950045, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2950045, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950045" class="layer">#1楼</a>
+<a name="2950045" id="comment_anchor_2950045"></a>
+
+
+<span class="comment_date">2014-05-27 10:31</span>
+
+ | 
+
+            <a id="a_comment_author_2950045" href="https://www.cnblogs.com/xiaocen/" target="_blank">想想宝宝</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_2950045" class="blog_comment_body">
+    写的很不错呀！ 赞一个！ 楼主；对虚拟化的内存空间了解么？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2950045, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2950045, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2950045_avatar" style="display:none">
+            https://pic.cnblogs.com/face/617226/20140513173954.png
+        </span>
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2950048, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2950048, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950048" class="layer">#2楼</a>
+<a name="2950048" id="comment_anchor_2950048"></a>
+
+
+<span class="comment_date">2014-05-27 10:31</span>
+
+ | 
+
+            <a id="a_comment_author_2950048" href="https://www.cnblogs.com/xiaocen/" target="_blank">想想宝宝</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_2950048" class="blog_comment_body">
+    如果能够写出来, 岂不更好?
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2950048, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2950048, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2950048_avatar" style="display:none">
+            https://pic.cnblogs.com/face/617226/20140513173954.png
+        </span>
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2950056, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2950056, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950056" class="layer">#3楼</a>
+<a name="2950056" id="comment_anchor_2950056"></a>
+
+
+<span class="comment_date">2014-05-27 10:38</span>
+
+ | 
+
+            <a id="a_comment_author_2950056" href="https://www.cnblogs.com/xiaocen/" target="_blank">想想宝宝</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_2950056" class="blog_comment_body">
+    malloc() 系统调用在那些频繁需要创建以及回收应用场景有太多的不足；楼主如果能够把它的不足，一一地列出来；以及google tcmalloc()，针对于malloc()做出了那些改进 能够写出来；那就完美了！楼主 我看好你哦！ 加油！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2950056, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2950056, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2950056_avatar" style="display:none">
+            https://pic.cnblogs.com/face/617226/20140513173954.png
+        </span>
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2950061, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2950061, &#39;Hlck/RdqJkCX5+yzhZQfTyc7yI5EZoczAH3jBUc00vxJso9/5o170A==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950061" class="layer">#4楼</a>
+<a name="2950061" id="comment_anchor_2950061"></a>
+
+
+<span class="comment_date">2014-05-27 10:40</span>
+
+ | 
+
+            <a id="a_comment_author_2950061" href="https://www.cnblogs.com/xiaocen/" target="_blank">想想宝宝</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_2950061" class="blog_comment_body">
+    我很欣赏楼主；我们做朋友吧！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2950061, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2950061, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2950061_avatar" style="display:none">
+            https://pic.cnblogs.com/face/617226/20140513173954.png
+        </span>
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(2950092, &#39;Y/Mw7QXkybtmENCD60kBTYQTtAu1g5iFVSvLJiiPhwPwB2nltP+EBg==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(2950092, &#39;Y/Mw7QXkybtmENCD60kBTYQTtAu1g5iFVSvLJiiPhwPwB2nltP+EBg==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950092" class="layer">#5楼</a>
+<a name="2950092" id="comment_anchor_2950092"></a>
+[<span class="louzhu">楼主</span>]
+
+<span class="comment_date">2014-05-27 11:19</span>
+
+ | 
+
+            <a id="a_comment_author_2950092" href="https://www.cnblogs.com/clover-toeic/" target="_blank">clover_toeic</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_2950092" class="blog_comment_body">
+    <a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#2950045" title="查看所回复的评论" onclick="commentManager.renderComments(0,50,2950045);">@</a>
+姜明则<br>承蒙兄台抬爱哈！其实我对内存虚拟化和tcmalloc并不了解……主要是平时工作中用到的知识深挖了一点，并未系统学习和研究过(用不到容易忘记)。<br>至于malloc的不足，我接触到的就是分配效率和碎片的问题。一般我倾向于使用栈内存，在需要持久化时考虑静态数据区。其他不足没有深入研究过，贸然去写难免不负责任，还请见谅。<br>四海之内皆兄弟，做朋友有何不可？哈哈~
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(2950092, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(2950092, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        <span id="comment_2950092_avatar" style="display:none">
+            https://pic.cnblogs.com/face/569008/20140515221533.png
+        </span>
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3227043, &#39;toCe4yK6HkOKkIbqW4lqGXzOhGA07xkgflIHg6ZLayOobUYuAdUEtw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3227043, &#39;toCe4yK6HkOKkIbqW4lqGXzOhGA07xkgflIHg6ZLayOobUYuAdUEtw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#3227043" class="layer">#6楼</a>
+<a name="3227043" id="comment_anchor_3227043"></a>
+
+
+<span class="comment_date">2015-07-13 20:31</span>
+
+ | 
+
+            <a id="a_comment_author_3227043" href="https://home.cnblogs.com/u/625780/" target="_blank">TargetNull</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_3227043" class="blog_comment_body">
+    请教一下楼主，其实关于虚拟内存有个地方一直不是很懂<br>就是虚拟地址就是物理地址+0xC0000000吗，也就是加上page_offet？然后这个page_offset恰好是kernel的起始虚地址，即0xC0000000这样设置的目的是什么呢，一直不太明白。<br>而且这样设置的话，岂不是只有内核空间才映射到物理地址的低端？用户空间的虚地址是低于3G，的那么减去0xC0000000后的物理地址岂不是就变为了负数，在补码表示下反而在物理地址的高段？<br><br>但是又说物理地址大于896M的是高端内存，不能直接执行映射，，，这里有点晕了
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3227043, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3227043, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+			</div>
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+				<div class="feedbackManage">
+					&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3227044, &#39;toCe4yK6HkOKkIbqW4lqGXzOhGA07xkgflIHg6ZLayOobUYuAdUEtw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3227044, &#39;toCe4yK6HkOKkIbqW4lqGXzOhGA07xkgflIHg6ZLayOobUYuAdUEtw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+
+				</div>
+				
+<a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#3227044" class="layer">#7楼</a>
+<a name="3227044" id="comment_anchor_3227044"></a>
+
+        <span id="comment-maxId" style="display:none">3227044</span>
+        <span id="comment-maxDate" style="display:none">2015/7/13 下午8:33:36</span>
+
+<span class="comment_date">2015-07-13 20:33</span>
+
+ | 
+
+            <a id="a_comment_author_3227044" href="https://home.cnblogs.com/u/625780/" target="_blank">TargetNull</a>
+
+			</div>
+			<div class="feedbackCon">
+				
+<div id="comment_body_3227044" class="blog_comment_body">
+    @<br>就比如用户空间的虚地址0xBFFFFFFFF变换为物理地址就是减去0xC0000000，减去之后后不就变为了0xFFFFFFFF吗，这样显然有问题，因为物理内存可能是只有1G的，得到这个地址那对于的物理地址怎么访问呢？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3227044, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3227044, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+
+			</div>
+		</div>
+
+<div id="comment_pager_bottom">
+    
+</div>
+
+
+</div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/clover-toeic/p/3754433.html#top">返回顶部</a></div>
+    <div id="comment_form_container"><script type="text/javascript" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/mention.js.下载"></script>
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+<p>
+    昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="xuchanglong">
+</p>
+<div class="commentbox_main">
+    <div class="commentbox_title">
+        <div class="commentbox_title_left">评论内容：</div>
+        <div class="commentbox_title_right">
+            <img id="ubb_quote" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+            <img id="ubb_bold" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+            <img id="ubb_url" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+            <img id="ubb_indent" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+            <img id="ubb_code" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+            <img id="ubb_img" class="comment_icon" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+        </div>
+    </div>
+    <div style="display:none">
+        <span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+        <span id="span_parent_id"></span>
+        <span id="span_comment_replyto"></span>
+        <span id="span_comment_posted"></span>
+    </div>
+    <textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+    <input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+    <span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+    <a href="javascript:void(0);" onclick="return logout();">退出</a>
+            <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></div>
+<p>[Ctrl+Enter快捷键提交]</p>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-工控&#39;)">【推荐】超50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cloud.tencent.com/act/seckill?fromSource=gwzcw.3168381.3168381.3168381&amp;utm_medium=cpc&amp;utm_id=gwzcw.3168381.3168381.3168381" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-腾讯云&#39;)">【推荐】腾讯云热门云产品限时秒杀，爆款1核2G云服务器99元/年！</a><br><a href="http://click.aliyun.com/m/1000081987/" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云&#39;)">【推荐】阿里云双11返场来袭，热门产品低至一折等你来抢！</a><br><a href="https://www.jdcloud.com/cn/activity/year-end?utm_source=DMT_cnblogs&amp;utm_medium=CH&amp;utm_campaign=q4vm&amp;utm_term=Virtual-Machines" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-京东云&#39;)">【活动】京东云服务器_云主机低于1折，低价高性能产品备战双11</a><br><a href="https://www.huodongxing.com/event/1521928757400" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-七牛云&#39;)">【活动】ECUG For Future 技术者的年度盛会（杭州，1月4-5日）</a><br></div>
+    <div id="opt_under_post"></div>
+    <script async="async" src="./Linux虚拟地址空间布局 - clover_toeic - 博客园_files/gpt.js.下载"></script>
+    <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+    </script>
+    <script>
+        googletag.cmd.push(function () {
+            googletag.defineSlot("/1090369/C1", [300, 250], "div-gpt-ad-1546353474406-0").addService(googletag.pubads());
+            googletag.defineSlot("/1090369/C2", [468, 60], "div-gpt-ad-1539008685004-0").addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1546353474406-0" style="height:250px; width:300px;"></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="Linux虚拟地址空间布局以及进程栈和线程栈总结" href="https://www.cnblogs.com/xzzzh/p/6596982.html" target="_blank" onclick="clickRecomItmem(6596982)">Linux虚拟地址空间布局以及进程栈和线程栈总结</a><br>·  <a title="c/c++内存释放知识总结" href="https://www.cnblogs.com/chuncn/archive/2011/04/12/2014273.html" target="_blank" onclick="clickRecomItmem(2014273)">c/c++内存释放知识总结</a><br>·  <a title="c++内存释放问题" href="https://www.cnblogs.com/chongaaron/p/3213395.html" target="_blank" onclick="clickRecomItmem(3213395)">c++内存释放问题</a><br>·  <a title="浅谈C语言内存管理、内存泄露、堆栈" href="https://www.cnblogs.com/youthshouting/p/4280543.html" target="_blank" onclick="clickRecomItmem(4280543)">浅谈C语言内存管理、内存泄露、堆栈</a><br>·  <a title="一条进程的栈区、堆区、数据区和代码区在内存中的映射" href="https://www.cnblogs.com/oc-bowen/p/5113475.html" target="_blank" onclick="clickRecomItmem(5113475)">一条进程的栈区、堆区、数据区和代码区在内存中的映射</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/3754433">更多推荐...</a><div id="cnblogs_t5"><a href="https://developer.aliyun.com/article/718649?utm_content=g_1000088936" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T5-阿里云开发者社区&#39;)">这6种编码方法，你掌握了几个？</a></div></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1539008685004-0" style="height:60px; width:468px;">
+            <script>
+                if (new Date() >= new Date(2018, 9, 13)) {
+                    googletag.cmd.push(function () { googletag.display("div-gpt-ad-1539008685004-0"); });
+                }
+            </script>
+        </div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·              <a href="https://news.cnblogs.com/n/652160/" target="_blank">青云QingCloud 与华为完成系列兼容认证 加速云计算全面国产化进程</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/652159/" target="_blank">任正非：华为是不是好公司不在于上市，大家黑一下华为就恢复了本色</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/652158/" target="_blank">中兴高管：已导入5nm芯片 操作系统出货2亿套</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/652157/" target="_blank">私募以 43 亿美元收购 LogMeIn</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/652156/" target="_blank">华为Mate X供货还没跟上，Mate Xs就要来了，余承东亲自确认</a>
+            <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+        setTimeout(function () { incrementViewCount(cb_entryId); }, 50);
+        deliverAdT2();
+        deliverAdC1();
+        deliverAdC2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div></div>
+
+
+	</div><!--end: forFlow -->
+	</div><!--end: mainContent 主体内容容器-->
+
+	<div id="sideBar">
+		<div id="sideBarMain">
+			
+<div id="sidebar_news" class="newsItem"><!--done-->
+<div class="newsItem">
+<h3 class="catListTitle">公告</h3>
+	
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/clover-toeic/">
+            clover_toeic
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/clover-toeic/" title="入园时间：2013-09-19">
+            6年2个月
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/clover-toeic/followers/">
+            277
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/clover-toeic/followees/">
+            15
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow(&#39;b6689109-c220-e311-8d02-90b11c0b17d6&#39;)">+加关注</a></div>
+        <script>getFollowStatus('b6689109-c220-e311-8d02-90b11c0b17d6');</script>
+    </div>
+</div>
+</div>
+
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2019/11/18&#39;); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2019年12月</td>
+                            <td align="right" class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2020/01/18&#39;); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+                    <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+                    <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+                    <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+                    <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+                    <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+                    <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+                    <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+        </tr>
+            <tr>
+                        <td class="CalWeekendDay" align="center">
+                            1
+                        </td>
+                        <td class="" align="center">
+                            2
+                        </td>
+                        <td class="" align="center">
+                            3
+                        </td>
+                        <td class="" align="center">
+                            4
+                        </td>
+                        <td class="" align="center">
+                            5
+                        </td>
+                        <td class="" align="center">
+                            6
+                        </td>
+                    <td class="CalWeekendDay" align="center">
+                        7
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            8
+                        </td>
+                            <td class="" align="center">
+                                9
+                            </td>
+                            <td class="" align="center">
+                                10
+                            </td>
+                            <td class="" align="center">
+                                11
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                            <td class="" align="center">
+                                13
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            14
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            15
+                        </td>
+                            <td class="" align="center">
+                                16
+                            </td>
+                            <td class="" align="center">
+                                17
+                            </td>
+                            <td class="CalTodayDay" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                19
+                            </td>
+                            <td class="" align="center">
+                                20
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            21
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            22
+                        </td>
+                            <td class="" align="center">
+                                23
+                            </td>
+                            <td class="" align="center">
+                                24
+                            </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                            <td class="" align="center">
+                                27
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            28
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            29
+                        </td>
+                            <td class="" align="center">
+                                30
+                            </td>
+                            <td class="" align="center">
+                                31
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                1
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                3
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            4
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            5
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                6
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                7
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                8
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                9
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                10
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            11
+                        </td>
+                </tr>
+    </tbody>
+</table></div><script>loadBlogDefaultCalendar();</script></div>
+			
+			<div id="leftcontentcontainer">
+				<div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    
+</div>
+
+<!-- 常用链接 -->
+
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block">
+    
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+<div class="catListPostCategory">
+<h3 class="catListTitle">
+
+随笔分类
+
+
+</h3>
+
+
+<ul>
+
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/579079.html" rel="" target="">
+    编程实践(52)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/580637.html" rel="" target="">
+    工具介绍(5)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/580882.html" rel="" target="">
+    设计优化(5)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/579357.html" rel="" target="">
+    思维火花(4)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/585344.html" rel="" target="">
+    算法实现(2)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/580875.html" rel="" target="">
+    通信系统(3)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/582887.html" rel="" target="">
+    硬件电路(4)
+</a>
+ 
+</li>
+<li>
+<a href="https://www.cnblogs.com/clover-toeic/category/579078.html" rel="" target="">
+    语言知识(19)
+</a>
+ 
+</li>
+
+</ul>
+
+
+</div>
+
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block">
+    <div class="catListComment">
+<h3 class="catListTitle">最新评论</h3>
+
+	<div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/clover-toeic/p/3755401.html#4427338">1. Re:C语言函数调用栈(一)</a></li>
+                    <li class="recent_comment_body">好好学习了，这里涉及到汇编了，要复习下汇编的一些知识</li>
+                    <li class="recent_comment_author">--九卷</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/clover-toeic/p/5600246.html#4426035">2. Re:Python判断列表是否已排序的各种方法及其性能分析</a></li>
+                    <li class="recent_comment_body">棒(๑•̀ㅂ•́)و✧</li>
+                    <li class="recent_comment_author">--智穷</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/clover-toeic/p/3755401.html#4425568">3. Re:C语言函数调用栈(一)</a></li>
+                    <li class="recent_comment_body">@ dq116如果参数压栈时修改了esp，那么返回时也要修改esp(恢复原值)，从而回到调用前的现场。PS: 5年前写的东西，记不太清了，以上回复仅供参考。...</li>
+                    <li class="recent_comment_author">--clover_toeic</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/clover-toeic/p/3730362.html#4425543">4. Re:C语言表驱动法编程实践</a></li>
+                    <li class="recent_comment_body">@ 月笼纱多在项目中应用应用就能融会贯通了~...</li>
+                    <li class="recent_comment_author">--clover_toeic</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/clover-toeic/p/8447077.html#4425533">5. Re:Java编码常见的Log日志打印问题</a></li>
+                    <li class="recent_comment_body">@ XiLiEr引用2 logger.error("Country: "+ctry+", Province:" +prov +", City: "+city); //拼接符博主，这行有什么问题，可以正...</li>
+                    <li class="recent_comment_author">--clover_toeic</li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+    <div class="catListView">
+<h3 class="catListTitle">阅读排行榜</h3>
+	<div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3853132.html">
+                            1. C语言字节对齐问题详解(60896)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3851102.html">
+                            2. C语言预处理命令详解(27100)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3755401.html">
+                            3. C语言函数调用栈(一)(26219)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3736748.html">
+                            4. 可变参数函数详解(26153)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3754433.html">
+                            5. Linux虚拟地址空间布局(23905)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block">
+    <div class="catListFeedback">
+<h3 class="catListTitle">评论排行榜</h3>
+	<div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3741115.html">
+                            1. 基于VLAN的二三层转发(15)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3853132.html">
+                            2. C语言字节对齐问题详解(12)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3842758.html">
+                            3. 我的代码重构经验(12)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3730362.html">
+                            4. C语言表驱动法编程实践(10)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/clover-toeic/p/3755401.html">
+                            5. C语言函数调用栈(一)(8)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+
+
+</div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    <div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/clover-toeic/p/3853132.html">
+                                1. C语言字节对齐问题详解(45)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/clover-toeic/p/3755401.html">
+                                2. C语言函数调用栈(一)(37)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/clover-toeic/p/3851102.html">
+                                3. C语言预处理命令详解(28)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/clover-toeic/p/3754433.html">
+                                4. Linux虚拟地址空间布局(27)
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.cnblogs.com/clover-toeic/p/3728026.html">
+                                5. C语言头文件组织与包含原则(23)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script>
+			</div>
+			
+		</div><!--end: sideBarMain -->
+	</div><!--end: sideBar 侧边栏容器 -->
+	<div class="clear"></div>
+	</div><!--end: main -->
+	<div class="clear"></div>
+	<div id="footer">
+		<!--done-->
+Copyright © 2019 clover_toeic
+<br><span id="poweredby">Powered by .NET Core 3.1.0 on Linux</span>
+
+
+
+	</div><!--end: footer -->
+</div><!--end: home 自定义的最大容器 -->
+
+
+    
+
+<div class="xl-chrome-ext-bar" id="xl_chrome_ext_{4DB361DE-01F7-4376-B494-639E489D19ED}" style="display: none;">
+      <div class="xl-chrome-ext-bar__logo"></div>
+
+      <a id="xl_chrome_ext_download" href="javascript:;" class="xl-chrome-ext-bar__option">下载视频</a>
+      <a id="xl_chrome_ext_close" href="javascript:;" class="xl-chrome-ext-bar__close"></a>
+    </div></body></html>
