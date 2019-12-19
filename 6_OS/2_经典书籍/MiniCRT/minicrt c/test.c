@@ -14,7 +14,6 @@ int main(int argc, char *argv[])
 
 	fp = fopen("test3.c", "r");
 	if (fp != NULL)
-		;
 	{
 		char *buf = malloc(1024);
 		fread(buf, 1, 1024, fp);
@@ -28,5 +27,5 @@ int main(int argc, char *argv[])
 	printf("tmp:%s\n", tmp);
 	free(tmp);
 
-	return 1;
+	return 0;
 }
