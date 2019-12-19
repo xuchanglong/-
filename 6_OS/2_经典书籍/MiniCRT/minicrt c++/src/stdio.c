@@ -9,61 +9,60 @@ int mini_crt_init_io()
 #ifdef WIN32
 #include <Windows.h>
 
-FILE* fopen(const char *filename, const char* mode)
+FILE *fopen(const char *filename, const char *mode)
 {
 	HANDLE hFile = 0;
 	int access = 0;
 	int creation = 0;
-	
-	if( strcmp(mode, "w" ) == 0 )
+
+	if (strcmp(mode, "w") == 0)
 	{
-		access   |= GENERIC_WRITE;
+		access |= GENERIC_WRITE;
 		creation |= CREATE_ALWAYS;
 	}
-	
-	if (strcmp(mode,"w+") == 0)
+
+	if (strcmp(mode, "w+") == 0)
 	{
-		access		|= GENERIC_WRITE |GENERIC_READ;
-		creation	|= CREATE_ALWAYS;
-	}	
-	
-	if( strcmp(mode, "r") == 0 )
+		access |= GENERIC_WRITE | GENERIC_READ;
+		creation |= CREATE_ALWAYS;
+	}
+
+	if (strcmp(mode, "r") == 0)
 	{
 		access |= GENERIC_READ;
-		creation	+= OPEN_EXISTING;
+		creation += OPEN_EXISTING;
 	}
-	
 
-	if (strcmp(mode,"r+") == 0)
+	if (strcmp(mode, "r+") == 0)
 	{
-		access	|= GENERIC_WRITE | GENERIC_READ;
-		creation	|= TRUNCATE_EXISTING;
+		access |= GENERIC_WRITE | GENERIC_READ;
+		creation |= TRUNCATE_EXISTING;
 	}
 
-	hFile	= CreateFileA(filename,access,0,0,creation,0,0);
+	hFile = CreateFileA(filename, access, 0, 0, creation, 0, 0);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
 		return 0;
 	}
 
-	return (FILE*)hFile;	
+	return (FILE *)hFile;
 }
 
-int fread(void* buffer, int size, int count, FILE* stream)
+int fread(void *buffer, int size, int count, FILE *stream)
 {
 	int read = 0;
-	if(!ReadFile((HANDLE)stream, buffer, size*count, &read, 0))
+	if (!ReadFile((HANDLE)stream, buffer, size * count, &read, 0))
 	{
 		return 0;
 	}
-	
+
 	return read;
 }
 
-int fwrite(const void* buffer, int size, int count, FILE* stream)
+int fwrite(const void *buffer, int size, int count, FILE *stream)
 {
 	int written = 0;
-	if(!WriteFile((HANDLE)stream, buffer, size*count, &written, 0))
+	if (!WriteFile((HANDLE)stream, buffer, size * count, &written, 0))
 	{
 		return 0;
 	}
@@ -75,128 +74,132 @@ int fclose(FILE *fp)
 	return CloseHandle((HANDLE)fp);
 }
 
-int fseek(FILE* fp, int offset, int set)
+int fseek(FILE *fp, int offset, int set)
 {
 	return SetFilePointer((HANDLE)fp, offset, 0, set);
 }
 
-#else   //define linux
+#else //define linux
 
-
-static int open(const char* filename,int flags,int mode)
+static int open(const char *filename, int flags, int mode)
 {
-	int fd	= 0;
+	int fd = 0;
 	asm("movl $5,%%eax		\n\t"
 		"movl %1,%%ebx	\n\t"
 		"movl %2,%%ecx \n\t"
 		"movl %3,%%edx \n\t"
 		"int $0x80  \n\t"
-		"movl %%eax,%0 \n\t":
-		"=m"(fd):"m"(filename),"m"(flags),"m"(mode));
+		"movl %%eax,%0 \n\t"
+		: "=m"(fd)
+		: "m"(filename), "m"(flags), "m"(mode));
 
-		return fd;
+	return fd;
 }
 
-static int read(int fd,void* buffer,unsigned size)
+static int read(int fd, void *buffer, unsigned size)
 {
-	int ret	= 0;
+	int ret = 0;
 	asm("movl $3,%%eax \n\t"
 		"movl %1,%%ebx \n\t"
 		"movl %2,%%ecx \n\t"
 		"movl %3, %%edx \n\t"
 		"int $0x80  \n\t"
-		"movl %%eax,%0  \n\t":
-	"=m"(ret):"m"(fd),"m"(buffer),"m"(size));
+		"movl %%eax,%0  \n\t"
+		: "=m"(ret)
+		: "m"(fd), "m"(buffer), "m"(size));
 	return ret;
 }
 
-static int write(int fd,const void *buffer,unsigned size)
+static int write(int fd, const void *buffer, unsigned size)
 {
-	int ret	= 0;
+	int ret = 0;
 	asm("movl $4,%%eax  \n\t"
 		"movl %1,%%ebx \n\t"
 		"movl %2,%%ecx  \n\t"
 		"movl %3,%%edx \n\t"
 		"int $0x80  \n\t"
-		"movl %%eax,%0 \n\t":
-	"=m"(ret):"m"(fd),"m"(buffer),"m"(size));
+		"movl %%eax,%0 \n\t"
+		: "=m"(ret)
+		: "m"(fd), "m"(buffer), "m"(size));
 
 	return ret;
 }
 
 static int close(int fd)
 {
-	int ret	= 0;
+	int ret = 0;
 	asm("movl $6,%%eax  \n\t"
 		"movl %1,%%ebx  \n\t"
 		"int $0x80  \n\t"
-		"movl %%eax,%0 \n\t":
-	"=m"(ret):"m"(fd));
+		"movl %%eax,%0 \n\t"
+		: "=m"(ret)
+		: "m"(fd));
 
-	return	ret;
+	return ret;
 }
 
-static int seek(int fd,int offset,int mode)
+static int seek(int fd, int offset, int mode)
 {
-	int ret	= 0;
+	int ret = 0;
 	asm("movl $19,%%eax  \n\t"
 		"movl %1,%%ebx \n\t"
 		"movl %2,%%ecx  \n\t"
 		"movl %3,%%edx \n\t"
 		"int $0x80  \n\t"
-		"movl %%eax,%0 \n\t":
-	"=m"(ret):"m"(fd),"m"(offset),"m"(mode));
+		"movl %%eax,%0 \n\t"
+		: "=m"(ret)
+		: "m"(fd), "m"(offset), "m"(mode));
 
 	return ret;
 }
 
-FILE* fopen(const char *filename, const char* mode)
+FILE *fopen(const char *filename, const char *mode)
 {
 	int fd = -1;
 	int flags = 0;
-	int access = 00700;  //´´½¨ÎÄ¼þµÄÈ¨ÏÞ 
-	
-	//À´×ÔÓÚ/usr/include/bits/fcntl.h
-	//×¢Òâ£ºÒÔ0¿ªÊ¼µÄÊý×ÖµÄ°Ë½øÖÆµÄ
-#define O_RDONLY	00
-#define O_WRONLY	01
-#define O_RDWR		02
-#define O_CREAT		0100
-#define O_TRUNC		01000
-#define O_APPEND	02000
+	int access = 00700; //ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½È¨ï¿½ï¿½
 
-	if( strcmp( mode, "w") == 0 )
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/usr/include/bits/fcntl.h
+	//×¢ï¿½â£ºï¿½ï¿½0ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ÖµÄ°Ë½ï¿½ï¿½Æµï¿½
+#define O_RDONLY 00
+#define O_WRONLY 01
+#define O_RDWR 02
+#define O_CREAT 0100
+#define O_TRUNC 01000
+#define O_APPEND 02000
+
+	if (strcmp(mode, "w") == 0)
 	{
-		flags |= 0_WRONLY | 0_CREAT |0_TRUNC;
-	}		
-	
-	if( strcmp(mode, "w+") == 0 )
-	{
-		flags |= 0_RD_WR | 0_CREAT |0_TRUNC;
-	}
-	
-	if (strcmp(mode,"r") == 0)
-	{
-		flags	|= O_RDONLY;
+		flags |= 0_WRONLY | 0_CREAT | 0_TRUNC;
 	}
 
-	if (strcmp(mode,"r+") == 0)
+	if (strcmp(mode, "w+") == 0)
 	{
-		flags	|= O_RDWR | O_CREAT;
+		flags |= 0_RD_WR | 0_CREAT | 0_TRUNC;
+	}
+
+	if (strcmp(mode, "r") == 0)
+	{
+		flags |= O_RDONLY;
+	}
+
+	if (strcmp(mode, "r+") == 0)
+	{
+		flags |= O_RDWR | O_CREAT;
 	}
 
 	fd = open(filename, flags, access);
-	return (FILE*)fd;
+	return (FILE *)fd;
 }
 
-int fread(void* buffer, int size, int count, FILE* stream)
+int fread(void *buffer, int size, int count, FILE *stream)
 {
-	return read((int)stream, buffer, size*count);
+	return read((int)stream, buffer, size * count);
 }
 
-int fwrite(const void* buffer,int size,int count,FILE* stream)
+int fwrite(const void *buffer, int size, int count, FILE *stream)
 {
-	return write((int)stream,buffer,size*count);
+	return write((int)stream, buffer, size * count);
 }
 
 int fclose(FILE *fp)
@@ -204,9 +207,9 @@ int fclose(FILE *fp)
 	return close((int)fp);
 }
 
-int fseek(FILE* fp,int offset,int set)
+int fseek(FILE *fp, int offset, int set)
 {
-	return seek((int)fp,offset,set);
+	return seek((int)fp, offset, set);
 }
 
 #endif

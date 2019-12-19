@@ -59,11 +59,11 @@ void mini_crt_call_exit_routine()
 	atexit_list = 0;
 }
 
-    ֵ��һ����ǣ���ע�ắ��ʱ����ע��ĺ����ǲ��뵽�б�ͷ���ģ���β��
-mini_crt_call_exit_routine()�Ǵ�ͷ����ʼ�����ģ�������atexit()��_cxa_atexit()ע��ĺ���
-�ǰ�����ע�����õ�˳�����̨���������Ĺ�����Ϊ�ȹ����ȫ�ֶ���Ӧ�ú�������
+//     值得一提的是，在注册函数时，被注册的函数是插入到列表头部的，而尾后
+// mini_crt_call_exit_routine()是从头部开始遍历的，于是由atexit()或_cxa_atexit()注册的函数
+// 是按照先注册后调用的顺序，这符台析构函数的规则，因为先构造的全局对象应该后析构。
 		
-13.3.4��ں����޸�
-    ����������ȫ�ֹ����������֧�֣���ô��Ҫ��MiniCRT����ں�����exit()��������
-�޸ģ��Ѷ�do_global_ctors()��mini_crt_call_exit_routine()�ĵ��ü��뵽entry()��exit()����
-��ȥ���޸ĺ��entry.c���£�ʡ��һ����δ�޸ĵ����ݣ���
+// 13.3.4入口函数修改
+//     由于增加了全局构造和析构的支持，那么需要对MiniCRT的入口函数和exit()函数进行
+// 修改，把对do_global_ctors()和mini_crt_call_exit_routine()的调用加入到entry()和exit()函数
+// 中去。修改后的entry.c如下（省略一部分未修改的内容）：
