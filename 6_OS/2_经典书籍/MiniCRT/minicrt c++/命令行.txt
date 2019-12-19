@@ -1,0 +1,5 @@
+>cl /c /DWIN32 /GS- ./src/entry.c ./src/malloc.c ./src/printf.c ./src/stdio.c ./src/string.c ./src/atexit.c
+>cl /c /DWIN32 /GS- /GR- ./src/crtbegin.cpp ./src/crtend.cpp ./src/ctors.cpp ./src/new_delete.cpp ./src/iostream.cpp
+>lib entry.obj malloc.obj printf.obj stdio.obj string.obj ctors.obj new_delete.obj atexit.obj iostream.obj /OUT:minicrt.lib
+>cl /c /DWIN32 /GR- test.cpp
+>link test.obj minicrt.lib kernel32.lib /NODEFAULTLIB /entry:mini_crt_entry
