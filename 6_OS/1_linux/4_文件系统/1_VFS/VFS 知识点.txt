@@ -1,0 +1,20 @@
+1、数据结构的意义
+存储设备上的实际文件                -->  struct inode
+存储设备上的实际文件在内存中的表示   -->  struct file 
+                                  （保存文件“打开”这一状态的元数据。实际上 open 操作就是建立 file 和 inode 和 dentry 之间的关系的过程。）
+该进程中打开的文件的集合            -->  struct files_struct 
+
+已安装的文件系统的控制信息           -->  struct super block
+具体的文件系统的类型的信息           -->  struct file_system_type 
+已安装的文件系统的装载点             -->  struct vfsmount
+
+建立进程与当前路径下的文件系统和根目录下的文件系统的关系  -->  struct fs_struct
+
+2、安装点、超级块、文件系统类型信息。
+vfsmount --> super block --> file_system_type
+
+3、进程、文件集、文件对象数组、目录项、索引节点。（用户空间中通过文件描述符读写指定文件的步骤）
+task_struct --> files_struct --> file --> dentry --> inode
+
+4、超级块、文件对象链表、目录项、索引节点
+super block --> file --> dentry --> inode
