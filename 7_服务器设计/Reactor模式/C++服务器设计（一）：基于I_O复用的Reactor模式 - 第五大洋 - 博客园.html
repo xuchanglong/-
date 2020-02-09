@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)https://www.cnblogs.com/moyangvip/p/5360837.html -->
+<html lang="zh-cn"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style class="darkreader darkreader--fallback" media="screen"></style><style class="darkreader darkreader--text" media="screen"></style><style class="darkreader darkreader--invert" media="screen"></style><style class="darkreader darkreader--inline" media="screen">[data-darkreader-inline-bgcolor] {
+  background-color: var(--darkreader-inline-bgcolor) !important;
+}
+[data-darkreader-inline-bgimage] {
+  background-image: var(--darkreader-inline-bgimage) !important;
+}
+[data-darkreader-inline-border] {
+  border-color: var(--darkreader-inline-border) !important;
+}
+[data-darkreader-inline-border-bottom] {
+  border-bottom-color: var(--darkreader-inline-border-bottom) !important;
+}
+[data-darkreader-inline-border-left] {
+  border-left-color: var(--darkreader-inline-border-left) !important;
+}
+[data-darkreader-inline-border-right] {
+  border-right-color: var(--darkreader-inline-border-right) !important;
+}
+[data-darkreader-inline-border-top] {
+  border-top-color: var(--darkreader-inline-border-top) !important;
+}
+[data-darkreader-inline-boxshadow] {
+  box-shadow: var(--darkreader-inline-boxshadow) !important;
+}
+[data-darkreader-inline-color] {
+  color: var(--darkreader-inline-color) !important;
+}
+[data-darkreader-inline-fill] {
+  fill: var(--darkreader-inline-fill) !important;
+}
+[data-darkreader-inline-stroke] {
+  stroke: var(--darkreader-inline-stroke) !important;
+}
+[data-darkreader-inline-outline] {
+  outline-color: var(--darkreader-inline-outline) !important;
+}</style><style class="darkreader darkreader--user-agent" media="screen">html {
+    background-color: #181a1b !important;
+}
+html, body, input, textarea, select, button {
+    background-color: #181a1b;
+}
+html, body, input, textarea, select, button {
+    border-color: #575757;
+    color: #e8e6e3;
+}
+a {
+    color: #3391ff;
+}
+table {
+    border-color: #4c4c4c;
+}
+::placeholder {
+    color: #bab5ab;
+}
+::selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+::-moz-selection {
+    background-color: #005ccc;
+    color: #ffffff;
+}
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+    background-color: #545b00 !important;
+    color: #e8e6e3 !important;
+}
+::-webkit-scrollbar {
+    background-color: #1c1e1f;
+    color: #c5c1b9;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #2a2c2e;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: #323537;
+}
+::-webkit-scrollbar-thumb:active {
+    background-color: #3d4043;
+}
+::-webkit-scrollbar-corner {
+    background-color: #181a1b;
+}
+* {
+    scrollbar-color: #2a2c2e #1c1e1f;
+}</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+    <meta property="og:description" content="I/O模型选择 在网络服务端编程中，一个常见的情景是服务器需要判断多个已连接套接字是否可读，如果某个套接字可读，则读取该套接字数据，并进行进一步处理。 在最常用的阻塞式I/O模型中，我们对每个连接套接">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>C++服务器设计（一）：基于I/O复用的Reactor模式 - 第五大洋 - 博客园</title>
+    
+    <link rel="stylesheet" href="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/blog-common.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    <link id="MainCss" rel="stylesheet" href="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/bundle-sea.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    
+    <link id="mobile-style" media="only screen and (max-width: 767px)" type="text/css" rel="stylesheet" href="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/bundle-sea-mobile.min.css"><style class="darkreader darkreader--sync" media="screen"></style>
+    
+    <link type="application/rss+xml" rel="alternate" href="https://www.cnblogs.com/moyangvip/rss">
+    <link type="application/rsd+xml" rel="EditURI" href="https://www.cnblogs.com/moyangvip/rsd.xml">
+    <link type="application/wlwmanifest+xml" rel="wlwmanifest" href="https://www.cnblogs.com/moyangvip/wlwmanifest.xml">
+    <script async="" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/analytics.js.下载"></script><script src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/jquery-2.2.0.min.js.下载"></script><style class="darkreader darkreader--override" media="screen">.jfk-bubble {
+    background-color: #000000 !important;
+}
+.vimvixen-hint {
+    background-color: #7b5300 !important;
+    border-color: #d8b013 !important;
+    color: #f3e8c8 !important;
+}
+::placeholder {
+    opacity: 0.5 !important;
+}</style><style type="text/css" abt="234"></style><style class="darkreader darkreader--sync" media="screen"></style>
+    <script src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/blog-common.min.js.下载"></script>
+    <script>
+        var currentBlogId = 205975;
+        var currentBlogApp = 'moyangvip';
+        var cb_enable_mathjax = false;
+        var isLogined = true;
+    </script>
+    
+    
+    
+<script>//remove baidu search ad
+var _countAA = 0
+function doBBBd(){
+    var alla = document.getElementsByTagName('a')
+    for(var i = 0; i < alla.length; i++){
+        if(/baidu.com\/(baidu.php\?url=|adrc.php\?t)/.test(alla[i].href)){
+            var _temp = alla[i].parentElement, loop = 0
+            while(loop < 5){
+                _temp = _temp.parentElement
+                loop++
+                if(_temp.parentElement.id == 'content_left'){
+                    _temp.remove()
+                    break
+                }
+            }
+        }
+    }
+    
+    if(_countAA++ < 20){
+        setTimeout(doBBBd, 500)
+    }
+    
+}
+doBBBd()
+document.addEventListener('keyup', function(){_countAA-=10;doBBBd()}, false)
+document.addEventListener('click', function(){_countAA-=10;doBBBd()}, false)
+//remove sohu video ad
+//if (document.URL.indexOf("tv.sohu.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+//remove 56.com video ad
+//if (document.URL.indexOf("56.com") >= 0){
+//    if (document.cookie.indexOf("fee_status=true")==-1){document.cookie='fee_status=true'};
+//}
+</script></head>
+<body>
+    <a name="top"></a>
+    
+    <!--done-->
+<div id="header">
+	
+<!--done-->
+<div class="header">
+	<div class="headerText">
+		<a id="Header1_HeaderTitle" class="headermaintitle HeaderMainTitle" href="https://www.cnblogs.com/moyangvip/">第五大洋</a>
+<br>
+		
+
+
+	</div>
+</div>
+
+
+</div>
+
+<div id="mytopmenu">
+	
+		<div id="mylinks">
+<a id="blog_nav_sitehome" class="menu" href="https://www.cnblogs.com/">
+博客园</a>
+ &nbsp;
+
+<a id="blog_nav_myhome" class="menu" href="https://www.cnblogs.com/moyangvip/">
+首页</a>
+ &nbsp;
+
+
+<a id="blog_nav_newpost" class="menu" href="https://i.cnblogs.com/EditPosts.aspx?opt=1">
+新随笔</a>
+ &nbsp;
+
+<a id="blog_nav_contact" class="menu" href="https://msg.cnblogs.com/send/%E7%AC%AC%E4%BA%94%E5%A4%A7%E6%B4%8B">
+联系</a> &nbsp;
+
+<a id="blog_nav_rss" class="menu" href="https://www.cnblogs.com/moyangvip/rss/">
+订阅</a>
+<a id="blog_nav_rss_image" href="https://www.cnblogs.com/moyangvip/rss/">
+    <img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/xml.gif" alt="订阅">
+</a>&nbsp;
+
+<a id="blog_nav_admin" class="menu" href="https://i.cnblogs.com/">
+管理</a>
+
+
+</div>
+		<div id="mystats">随笔-
+19&nbsp;
+评论-
+8&nbsp;
+文章-
+0&nbsp;
+<!--trackbacks-<partial name="./Shared/_PingTrackCount.cshtml" model="BlogServer.Web.Models.DetailBlogPage" />-->
+
+</div>
+	
+</div>
+<div id="centercontent">
+	<div id="post_detail">
+<div class="post">
+	<h1 class="postTitle">
+<a id="cb_post_title_url" class="postTitle2" href="https://www.cnblogs.com/moyangvip/p/5360837.html">C++服务器设计（一）：基于I/O复用的Reactor模式</a>
+</h1>
+	
+<div id="cnblogs_post_body" class="blogpost-body ">
+    <h3>&nbsp;I/O模型选择</h3>
+<p>　　在网络服务端编程中，一个常见的情景是服务器需要判断多个已连接套接字是否可读，如果某个套接字可读，则读取该套接字数据，并进行进一步处理。</p>
+<p>在最常用的阻塞式I/O模型中，我们对每个连接套接字通过轮流read系统调用获取可读数据。如图3-1所示，read系统调用将会把该线程阻塞，直到数据报到达且被复制到应用进程的缓冲区中时才会返回。</p>
+<p align="center">&nbsp;<img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000203682-1289444499.png" alt=""></p>
+<p align="center">图3-1 阻塞式I/O模型</p>
+<p>　　在阻塞式I/O模型中，数据可读和读取数据这两个操作被合并在了一个系统调用中，对于单个套接字是否可读的判断，必须要等到实际数据接收完成才行，阻塞耗时是不确定的。考虑到这样一个情景，如果服务器中有十个已连接的的套接字，此时服务器给其中一个套接字调用read，而这个连接客户下一次向服务器发送数据将是2小时后。则该服务器也将阻塞在read这个系统调用2个小时，这段时间内服务器就算收到其他九个已连接的套接字数据也无法进行处理。这种一次只能针对一个客户连接的服务器I/O模型显然不是我们应该考虑的。</p>
+<p>　　我们可以在阻塞式I/O模型的基础上进行修改，采用非阻塞式I/O模型。如图3-2所示，我们在执行read系统调用时，如果没有立即收到数据报，我们将不会把线程投入睡眠，而是返回一个错误。</p>
+<p align="center">&nbsp;<img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000252120-2128340309.png" alt=""></p>
+<p align="center">图3-2 非阻塞式I/O模型</p>
+<p>　　在非阻塞I/O模型中，虽然数据可读和读取数据这两个操作依旧在一个系统调用中，但是如果没有数据可读，系统调用将立即返回。此时我们可以对多个连接套接字轮流调用read，直到某次调用收到了实际数据，我们才针对这次收到的数据进行处理。通过这种方式，我们能够初步解决服务器同时读取多个客户数据的问题。但是这种在一个线程内对多个非阻塞描述符循环调用read的方式，我们称之为轮询。应用持续轮询内核，以查看某个操作是否就绪，这往往会消耗大量CPU时间，同时也会给整个服务器带来极大的额外开销。因此这种服务器I/O模型也不能很好的满足我们对于高性能的追求。</p>
+<p>　　一种改良方案是在以上两种I/O模型的基础上加入多线程支持，即thread-per-connection方案。在该方案中，服务器会给每个连接客户分配一个线程，每个连接的读写都是在一个单独的线程中进行。因此对一个客户线程内的套接字进行读取操作，最多只会阻塞该客户线程，而不会对其他线程的其他连接产生影响。这是Java网络编程常见方案。这种方式中线程创建和销毁的开销较大，因此并不适合可能会频繁连接和断开的短连接服务，当然频繁的线程创建和销毁可以通过线程池进行改良。同时这种方案的伸缩性同样受到线程数的限制，对于存在的一两百个连接而创建的一两百个线程数，系统还能勉强支撑，但是如果同时存在几千个线程的话，这将会对操作系统的调度程序产生极大的负担。同时更多的线程也会对内存大小提出很高的要求。</p>
+<p>　　我们从以上几个例子可以看出，解决服务器对多个连接套接字的读取的关键，其一是需将可读判断与实际读取数据相分离；其二是能同时支持多个套接字可读判断。因此我们需要一种能够预先告知内核的能力，使得内核一旦发现进程指定的一个或多个I/O条件就绪，即输入已经准备好被读取，它就通知进程。这个行为称之为I/O复用。在Linux平台上，提供了select、poll和epoll这几种系统调用作为I/O复用的方式。</p>
+<p>　　Epoll是Linux内核为处理大批量文件描述符而做了改进的poll，是Linux下多路复用I/O接口的增强版本，支持水平触发和边缘触发两种方式。相对于select等I/O复用方式，它具有支持大数目的描述符，I/O效率不随注册的描述符数目增加而线性下降（传统的select以及poll的效率会因为注册描述符数量的线形递增而导致呈二次乃至三次方的下降），和使用mmap加速内核与用户空间的消息传递等优点。本系统将采用水平触发的epoll作为具体I/O复用的系统调用。</p>
+<p align="center">&nbsp;<img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000332932-1825735981.png" alt=""></p>
+<p align="center">图3-3 I/O复用模型</p>
+<p>　　如图3-3所示，我们将多个连接套接字注册在I/O复用的epoll系统调用中，并注册读事件，此时系统阻塞于epoll调用，等待某个数据报套接字变为可读。当epoll返回时，将会返回可读的套接字集合，我们只需遍历这些可读套接字，然后分别对每个可读套接字调用read系统调用，读出具体数据，并进一步进行相应处理即可。</p>
+<p>　　通过使用epoll的这种I/O复用模型，我们能够在不引入创建新线程开销的前提下实现了服务器对多个连接套接字的读取支持。此处的多个连接，只和系统内存大小相关。而且由于Linux内核对于epoll的优化，连接描述符数量的增加不会导致性能线性下降。因此基于epoll的I/O复用模型能够满足我们对于服务器系统高并发和高性能的需求。</p>
+<h3>Reactor模式介绍</h3>
+<p>　　在之前的研究中，我们选用epoll作为服务器系统的I/O复用模型。但是epoll太底层，它只是一个Linux的系统调用，需要通过某种事件处理机制进行进一步的封装。</p>
+<p>在普通的事件处理机制中，首先程序调用某个函数，然后函数执行，程序等待，当函数执行完毕后函数将结果和控制权返回给程序，最后程序继续处理。在之前的I/O复用模型的研究中，我们同样是采用这种事件处理顺序进行的。</p>
+<p>　　我们可以将整个问题抽象。每个已经连接的套接字描述符就是一个事件源，每一个套接字接收到数据后的进一步处理操作作为一个事件处理器。我们将需要被处理的事件处理源及其事件处理器注册到一个类似于epoll的事件分离器中。事件分离器负责等待事件发生。一旦某个事件发送，事件分离器就将该事件传递给该事件注册的对应的处理器，最后由处理器负责完成实际的读写工作。这种方式就是Reactor模式的事件处理方式。</p>
+<p>　　相对于之前普通函数调用的事件处理方式，Reactor模式是一种以事件驱动为核心的机制。在Reactor模式中，应用程序不是主动的调用某个API完成处理，而是逆置了事件处理流程，应用程序需要提供相应的事件接口并注册到Reactor上，如果相应的事件发生，Reactor将主动调用应用程序注册的接口，通过注册的接口完成具体的事件处理。</p>
+<h3>Reactor模式优点</h3>
+<p>　　Reactor模式是编写高性能网络服务器的必备技术之一，一些常用网络库如libevent、muduo等都是通过使用Reactor模式实现了网络库核心。它具有如下优点：</p>
+<ul>
+<li>响应速度快，不必为单个同步时间所阻塞，虽然Reactor本身依然是需要同步的；</li>
+<li>编程简单，可以最大程度的避免复杂的多线程及同步问题，并且避免了多线程/进程的切换开销；</li>
+<li>可扩展性强，可以很方便的通过增加Reactor实例个数来充分利用CPU资源；</li>
+<li>可复用性强，Reactor模式本身与具体事件处理逻辑无关，具有很高的复用性。</li>
+</ul>
+<h3>Reactor模式组成</h3>
+<p>　　图3-4是Reactor类图，图中表明Reactor模式由事件源、事件反应器、事件分离器、事件处理器等组件组成，具体介绍如下：</p>
+<p align="center"><img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000546026-550521873.png" alt=""></p>
+<p align="center">图3-4 Reactor类图</p>
+<ul>
+<li>l&nbsp; 事件源（handle）：由操作系统提供，用于识别每一个事件，如Socket描述符、文件描述符等。在服务端系统中用一个整数表示。该事件可能来自外部，如来自客户端的连接请求、数据等。也可能来自内部，如定时器事件。</li>
+<li>l&nbsp; 事件反应器（reactor）：定义和应用程序控制事件调度，以及应用程序注册、删除事件处理器和相关描述符相关的接口。它是事件处理器的调度核心，使用事件分离器来等待事件的发生。一旦事件发生，反应器先是分离每个事件，然后调度具体事件的事件处理器中的回调函数处理事件。</li>
+<li>l&nbsp; 事件分离器（demultiplexer）：是一个有操作系统提供的I/O复用函数，在此我们选用epoll。用来等待一个或多个事件的发生。调用者将会被阻塞，直到分离器分离的描述符集上有事件发生。</li>
+<li>l&nbsp; 事件处理器（even handler）：事件处理程序提供了一组接口，每个接口对应了一种类型的事件，供reactor在相应的事件发生时调用，执行相应的事件处理。一般每个具体的事件处理器总是会绑定一个有效的描述符句柄，用来识别事件和服务。</li>
+</ul>
+<h3>Reactor事件处理流程</h3>
+<p>　　Reactor事件处理流程如图3-5所示，它分为两个部分，其一为事件注册部分，其二为事件分发部分，具体论述如下。</p>
+<p align="center"><img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000644135-1240443370.png" alt="">&nbsp;</p>
+<p align="center">图3-5 Reactor事件处理时序图</p>
+<p>　　在事件注册部分，应用程序首先将期待注册的套接字描述符作为事件源，并将描述符和该事件对应的事件处理回调函数封装到具体的事件处理器中，并将该事件处理器注册到事件反应器中。事件反应器接收到事件后，进行相应处理，并将注册信息再次注册到事件分离器epoll中。最后在epoll分离器中，通过epoll_ctl进行添加描述符及其事件，并层层返回注册结果。</p>
+<p>　　在事件处理部分，首先事件反应器通过调用事件分离器的epoll_wait，使线程阻塞等待注册事件发生。此时如果某注册事件发生，epoll_wait将会返回，并将包含该注册事件在内的事件集返回给事件反应器。反应器接收到该事件后，根据该事件源找到该事件的事件处理器，并判断事件类型，根据事件类型在该事件处理器调用之前注册时封装的具体回调函数，在这个具体回调函数中完成事件处理。</p>
+<p>　　根据Reactor模式具体的事件处理流程可知，应用程序只参与了最开始的事件注册部分。对于之后的整个事件等待和处理的流程中，应用程序并不直接参与，最终的事件处理也是委托给了事件反应器进行。因此通过使用Reactor模式，应用程序无需关心事件是怎么来的，是什么时候来的，我们只需在注册事件时设置好相应的处理方式即可。这也反映了设计模式中的“好莱坞原则”，具体事件的处理过程被事件反应器控制反转了。</p>
+<h3>Reactor模式的使用</h3>
+<p>　　到目前为止，Reactor事件处理模式已经初步成型，我们通过进一步对Reactor模式的使用和完善来逐步实现服务端网络框架底层。</p>
+<p>我们将Reactor的事件分离器epoll返回，再到服务器下一次调用epoll阻塞，称之为一次事件循环。如图3-6所示，我们将从业务的角度，对服务器系统开始监听客户端连接到处理每一个连接的可读数据，这一整个业务流程进行详细分析。</p>
+<p align="center"><img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/694961-20160615000739588-1576516959.png" alt=""></p>
+<p align="center">图3-6 Reactor模式的事件循环</p>
+<p>　　在服务器刚启动时，我们完成相关初始化工作，并将服务器监听套接字及相应的监听套接字处理器注册到Reactor反应器。之后系统进入反应器的事件循环中等待注册事件发生。</p>
+<p>　　此时如果有事件发生且事件为监听套接字的可读事件，则表示有新连接产生。Reactor回调之前注册的监听套接字handler。在这个handler处理中，我们通过accept系统调用获取新连接的套接字，并将该新连接的套接字及其相应的连接套接字处理器注册到Reactor反应器中。执行完该监听套接字handler后，如果仍有事件未处理，我们继续进入该事件的handler中进行回调处理，否则我们进入下一次事件循环中，继续调用epoll阻塞等待新的事件。</p>
+<p>　　此时我们在Reactor反应器中已经注册了两类事件，一个是监听套接字可读事件，代表有新的连接到来；另一个是连接套接字可读事件，代表该连接套接字收到了客户端发来的数据。</p>
+<p>　　如果再次有事件发生，且为监听套接字可读事件，则继续做如上处理。如果为连接套接字，Reactor回调注册的连接套接字handler。在这个handler回调中，我们通过调用read系统调用获取客户端发送过来的数据，并根据我们具体的业务需求做进一步处理。直到所有事件处理完毕后，我们再次进入下次事件循环，继续调用epoll阻塞等待新的事件。</p>
+<p>　　通过以上业务实现，我们完成了在单线程下的服务器建立新的客户端连接，以及接收和处理客户端数据的工作。我们借助Reactor模式，不但保证了高并发和高性能的需求，同时也实现了网络细节与业务逻辑的分离。我们只需在注册的不同事件handler中实现具体的业务逻辑即可。</p>
+<p>&nbsp;</p>
+</div>
+<div id="MySignature"></div>
+<div class="clear"></div>
+<div id="blog_post_info_block"><div id="BlogPostCategory">
+    分类: 
+            <a href="https://www.cnblogs.com/moyangvip/category/841377.html" target="_blank">C++服务器设计</a></div>
+
+
+    <div id="blog_post_info">
+<div id="green_channel">
+        <a href="javascript:void(0);" id="green_channel_digg">已推荐</a>
+        <a id="green_channel_follow" onclick="follow(&#39;70e98234-9770-e411-b908-9dcfd8948a71&#39;);" href="javascript:void(0);">关注我</a>
+    <a id="green_channel_favorite" onclick="AddToWz(cb_entryId);return false;" href="javascript:void(0);">收藏该文</a>
+    <a id="green_channel_weibo" href="javascript:void(0);" title="分享至新浪微博" onclick="ShareToTsina()"><img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/icon_weibo_24.png" alt=""></a>
+    <a id="green_channel_wechat" href="javascript:void(0);" title="分享至微信" onclick="shareOnWechat()"><img src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/wechat.png" alt=""></a>
+</div>
+<div id="author_profile">
+    <div id="author_profile_info" class="author_profile_info">
+        <div id="author_profile_detail" class="author_profile_info">
+            <a href="https://home.cnblogs.com/u/moyangvip/">第五大洋</a><br>
+            <a href="https://home.cnblogs.com/u/moyangvip/followees/">关注 - 1</a><br>
+            <a href="https://home.cnblogs.com/u/moyangvip/followers/">粉丝 - 9</a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="author_profile_honor"></div>
+    <div id="author_profile_follow">
+                <a href="javascript:void(0);" onclick="follow(&#39;70e98234-9770-e411-b908-9dcfd8948a71&#39;);return false;">+加关注</a>
+    </div>
+</div>
+<div id="div_digg">
+    <div class="diggit" onclick="votePost(5360837,&#39;Digg&#39;)">
+        <span class="diggnum" id="digg_count">1</span>
+    </div>
+    <div class="buryit" onclick="votePost(5360837,&#39;Bury&#39;)">
+        <span class="burynum" id="bury_count">0</span>
+    </div>
+    <div class="clear"></div>
+    <div class="diggword" id="digg_tips">
+            您已推荐过，<a href="javascript:void(0);" onclick="votePost(5360837,&#39;Digg&#39;, true);return false;" class="digg_gray">取消</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    currentDiggType = 1;
+</script></div>
+    <div class="clear"></div>
+    <div id="post_next_prev">
+
+    <a href="https://www.cnblogs.com/moyangvip/p/5259700.html" class="p_n_p_prefix">« </a> 上一篇：    <a href="https://www.cnblogs.com/moyangvip/p/5259700.html" title="发布于 2016-03-09 21:18">Memcached内存管理模型分析</a>
+    <br>
+    <a href="https://www.cnblogs.com/moyangvip/p/5369913.html" class="p_n_p_prefix">» </a> 下一篇：    <a href="https://www.cnblogs.com/moyangvip/p/5369913.html" title="发布于 2016-06-15 00:34">C++服务器设计（二）：应用层I/O缓冲</a>
+
+</div>
+</div>
+	<div class="postDesc">posted on 
+<span id="post-date">2016-06-15 00:14</span>&nbsp;
+<a href="https://www.cnblogs.com/moyangvip/">第五大洋</a>&nbsp;
+阅读(<span id="post_view_count">2393</span>)&nbsp;
+评论(<span id="post_comment_count">3</span>)&nbsp;
+<a href="https://i.cnblogs.com/EditPosts.aspx?postid=5360837" rel="nofollow">编辑</a>&nbsp;
+<a href="javascript:void(0)" onclick="AddToWz(5360837);return false;">收藏</a></div>
+</div>
+
+
+<script src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/highlight.min.js.下载"></script>
+<script>markdown_highlight();</script>
+<script>
+    var allowComments = true, cb_blogId = 205975, cb_blogApp = 'moyangvip', cb_blogUserGuid = '70e98234-9770-e411-b908-9dcfd8948a71';
+    var cb_entryId = 5360837, cb_entryCreatedDate = '2016-06-15 00:14', cb_postType = 1; 
+    loadViewCount(cb_entryId);
+</script><a name="!comments"></a>
+<div id="blog-comments-placeholder">
+
+<div id="comment_pager_top">
+    
+</div>
+
+<!--done-->
+<br>
+<b>评论:</b>
+<div class="feedbackNoItems"><div class="feedbackNoItems"></div></div>
+	
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			
+<a href="https://www.cnblogs.com/moyangvip/p/5360837.html#3922713" class="layer">#1楼</a>
+<a name="3922713" id="comment_anchor_3922713"></a>
+
+
+				
+<span class="comment_date">2018-03-14 15:20</span>
+
+ | 
+
+            <a id="a_comment_author_3922713" href="https://home.cnblogs.com/u/1178795/" target="_blank">再见了，美丽的桔梗！！！</a>
+<br>
+				<div align="left">
+<div id="comment_body_3922713" class="blog_comment_body">
+    你好，博主。我是一名大二的学生，想找个项目瞧瞧，你可以提供一下源码看看吗？？我的邮箱是 meilidejiegeng@163.com   谢谢
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(3922713, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(3922713, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(3922713, &#39;p20PZKk60rVMA3q8MhUZ7Zqzy118pNKg98n+uaqsuBeDfKfHHxodQw==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(3922713, &#39;p20PZKk60rVMA3q8MhUZ7Zqzy118pNKg98n+uaqsuBeDfKfHHxodQw==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+</div>
+			</div>
+			
+			
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			
+<a href="https://www.cnblogs.com/moyangvip/p/5360837.html#4156001" class="layer">#2楼</a>
+<a name="4156001" id="comment_anchor_4156001"></a>
+
+
+				
+<span class="comment_date">2019-01-04 21:09</span>
+
+ | 
+
+            <a id="a_comment_author_4156001" href="https://www.cnblogs.com/huanshi/" target="_blank">欢石</a>
+<br>
+				<div align="left">
+<div id="comment_body_4156001" class="blog_comment_body">
+    shihuan11@163.com,能把源码给我看看吗？
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4156001, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4156001, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+&nbsp;&nbsp;
+
+<span class="comment_actions">
+    <a href="javascript:void(0);" onclick="return ReplyComment(4156001, &#39;HauGIvAOB7waTZmOvjA4GVwP+ZG6WRbyBYMI28KCDuhd7WIUyaOg3w==&#39;)">
+        回复
+    </a>
+    <a href="javascript:void(0);" onclick="return QuoteComment(4156001, &#39;HauGIvAOB7waTZmOvjA4GVwP+ZG6WRbyBYMI28KCDuhd7WIUyaOg3w==&#39;)">
+        引用
+    </a>
+    
+    
+</span>
+
+</div>
+			</div>
+			
+			
+		</div>
+		<div class="feedbackItem">
+			<div class="feedbackListSubtitle">
+			
+<a href="https://www.cnblogs.com/moyangvip/p/5360837.html#4495289" class="layer">#3楼</a>
+<a name="4495289" id="comment_anchor_4495289"></a>
+
+        <span id="comment-maxId" style="display:none">4495289</span>
+        <span id="comment-maxDate" style="display:none">2020/2/9 下午4:01:27</span>
+
+				
+<span class="comment_date">2020-02-09 16:01</span>
+
+ | 
+
+            <a id="a_comment_author_4495289" href="https://www.cnblogs.com/loveyry/" target="_blank">xuchanglong</a>
+<br>
+				<div align="left">
+<div id="comment_body_4495289" class="blog_comment_body">
+    总结的太好了！！
+</div>
+        <div class="comment_vote">
+            <span class="comment_error" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+            <a href="javascript:void(0);" class="comment_digg" onclick="return voteComment(4495289, &#39;Digg&#39;, this.parentElement, false);">
+                支持(0)
+            </a>
+            <a href="javascript:void(0);" class="comment_burry" onclick="return voteComment(4495289, &#39;Bury&#39;, this.parentElement, false);">
+                反对(0)
+            </a>
+        </div>
+        
+&nbsp;&nbsp;
+
+<span class="comment_actions">
+    
+    
+    <a href="javascript:void(0);" onclick="return GetCommentBody(4495289)">
+        修改
+    </a>
+    <a href="javascript:void(0);" onclick="return DelComment(4495289, this,&#39;5360837&#39;)">
+        删除
+    </a>
+</span>
+
+</div>
+			</div>
+			
+			
+		</div>
+
+
+
+
+<div id="comment_pager_bottom">
+    
+</div>
+
+
+</div>
+<script>
+    var commentManager = new blogCommentManager();
+    commentManager.renderComments(0);
+</script>
+
+<div id="comment_form" class="commentform">
+    <a name="commentform"></a>
+    <div id="divCommentShow"></div>
+    <div id="comment_nav"><span id="span_refresh_tips"></span><a href="javascript:void(0);" onclick="return RefreshCommentList();" id="lnk_RefreshComments" runat="server" clientidmode="Static">刷新评论</a><a href="https://www.cnblogs.com/moyangvip/p/5360837.html#" onclick="return RefreshPage();">刷新页面</a><a href="https://www.cnblogs.com/moyangvip/p/5360837.html#top">返回顶部</a></div>
+    <div id="comment_form_container"><script type="text/javascript" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/mention.js.下载"></script>
+<div id="commentform_title">发表评论</div>
+<span id="tip_comment" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></span>
+<p>
+    昵称：<input type="text" id="tbCommentAuthor" class="author" disabled="disabled" size="50" value="xuchanglong">
+</p>
+<div class="commentbox_main">
+    <div class="commentbox_title">
+        <div class="commentbox_title_left">评论内容：</div>
+        <div class="commentbox_title_right">
+            <img id="ubb_quote" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/quote.gif" alt="引用" title="添加引用" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;quote&#39;)">
+            <img id="ubb_bold" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/b.png" alt="粗体" title="添加粗体" onclick="insertUBB(&#39;tbCommentBody&#39;,&#39;b&#39;)">
+            <img id="ubb_url" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/lk.png" alt="链接" title="添加链接" onclick="insertUbbUrl(&#39;tbCommentBody&#39;)">
+            <img id="ubb_indent" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/indent.png" alt="缩进" title="添加首行缩进" onclick="insertIndent(&#39;tbCommentBody&#39;)">
+            <img id="ubb_code" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/InsertCode.gif" alt="代码" title="添加代码" onclick="insertUbbCode()">
+            <img id="ubb_img" class="comment_icon" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/img.gif" alt="图片" title="上传图片" onclick="OpenImageUploadWindow();">
+        </div>
+    </div>
+    <div style="display:none">
+        <span id="comment_edit_id"></span><span id="span_parentcomment_id"></span>
+        <span id="span_parent_id"></span>
+        <span id="span_comment_replyto"></span>
+        <span id="span_comment_posted"></span>
+    </div>
+    <textarea id="tbCommentBody" class="comment_textarea"></textarea>
+</div>
+<p id="commentbox_opt">
+    <input id="btn_comment_submit" type="button" class="comment_btn" value="提交评论">
+    <span id="span_comment_canceledit" style="display:none"><a href="javascript:void(0);" onclick="return CancelCommentEdit()">不改了</a></span>
+    <a href="javascript:void(0);" onclick="return logout();">退出</a>
+            <a id="commentbox_opt_sub" href="javascript:void(0);" title="订阅后有新评论时会邮件通知您" onclick="commentManager.Subscribe()">订阅评论</a>
+</p>
+<div id="tip_comment2" style="color: red; --darkreader-inline-color:#ff3333;" data-darkreader-inline-color=""></div>
+<p>[Ctrl+Enter快捷键提交]</p>
+</div>
+    <div class="ad_text_commentbox" id="ad_text_under_commentbox"></div>
+    <div id="ad_t2"><a href="http://www.ucancode.com/index.htm" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-ucancode&#39;)">【推荐】超50万行VC++源码: 大型组态工控、电力仿真CAD与GIS源码库</a><br><a href="https://cloud.tencent.com/act/developer?fromSource=gwzcw.3196333.3196333.3196333&amp;utm_medium=cpc&amp;utm_id=gwzcw.3196333.3196333.3196333" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-腾讯云&#39;)">【推荐】开发者上云福利，腾讯云1核4G云服务器11元/月起</a><br><a href="https://cloud.baidu.com/campaign/Annualceremony-2020/index.html?track=cp:dsp|pf:pc|pp:chui-bokeyuan-huodong-20niandushengdian-BCC-cpaxingshi-20200107|pu:cpa-xingshi|ci:2020ndsd|kw:2185443" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-百度云&#39;)">【推荐】开年盛典，百度智能云1核1G云服务器84元/年</a><br><a href="https://developer.aliyun.com/topic/feiyan2020?utm_content=g_1000102348" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-疫情公益专题&#39;)">【推荐】像阿里巴巴一样远程办公，这些资源+工具+方案都好用</a><br><a href="https://developer.aliyun.com/topic/feiyan2020?utm_content=g_1000102348" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T2-阿里云-疫情公益专题&#39;)">【推荐】疫情期间如何高效工作？阿里巴巴为你提供办公工具和资源</a><br></div>
+    <div id="opt_under_post"></div>
+    <script async="async" src="./C++服务器设计（一）：基于I_O复用的Reactor模式 - 第五大洋 - 博客园_files/gpt.js.下载"></script>
+    <script>
+        var googletag = googletag || {};
+        googletag.cmd = googletag.cmd || [];
+    </script>
+    <script>
+        googletag.cmd.push(function () {
+            googletag.defineSlot("/1090369/C1", [300, 250], "div-gpt-ad-1546353474406-0").addService(googletag.pubads());
+            googletag.defineSlot("/1090369/C2", [468, 60], "div-gpt-ad-1539008685004-0").addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+        });
+    </script>
+    <div id="cnblogs_c1" class="c_ad_block">
+        <div id="div-gpt-ad-1546353474406-0" style="height:250px; width:300px;"></div>
+    </div>
+    <div id="under_post_news"><div class="recomm-block"><b>相关博文：</b><br>·  <a title="事件驱动模式--Reactor" href="https://www.cnblogs.com/harvyxu/p/7498763.html" target="_blank" onclick="clickRecomItmem(7498763)">事件驱动模式--Reactor</a><br>·  <a title="IO设计模式：Reactor和Proactor对比" href="https://www.cnblogs.com/me115/p/4452801.html" target="_blank" onclick="clickRecomItmem(4452801)">IO设计模式：Reactor和Proactor对比</a><br>·  <a title="高性能IO之Reactor模式" href="https://www.cnblogs.com/doit8791/p/7461479.html" target="_blank" onclick="clickRecomItmem(7461479)">高性能IO之Reactor模式</a><br>·  <a title="Reactor模式" href="https://www.cnblogs.com/crazymakercircle/p/9833847.html" target="_blank" onclick="clickRecomItmem(9833847)">Reactor模式</a><br>·  <a title="两种高性能 I/O 设计模式 Reactor 和 Proactor" href="https://www.cnblogs.com/daoluanxiaozi/p/3274925.html" target="_blank" onclick="clickRecomItmem(3274925)">两种高性能 I/O 设计模式 Reactor 和 Proactor</a><br>»  <a target="_blank" href="https://recomm.cnblogs.com/blogpost/5360837">更多推荐...</a><div id="cnblogs_t5"><a href="https://developer.aliyun.com/topic/feiyan2020?utm_content=g_1000102348" target="_blank" onclick="ga(&#39;send&#39;, &#39;event&#39;, &#39;Link&#39;, &#39;click&#39;, &#39;T5-阿里云-疫情公益专题&#39;)">疫情期间如何高效工作？阿里巴巴为你提供办公工具和资源！</a></div></div></div>
+    <div id="cnblogs_c2" class="c_ad_block">
+        <div id="div-gpt-ad-1539008685004-0" style="height:60px; width:468px;">
+            <script>
+                if (new Date() >= new Date(2018, 9, 13)) {
+                    googletag.cmd.push(function () { googletag.display("div-gpt-ad-1539008685004-0"); });
+                }
+            </script>
+        </div>
+    </div>
+    <div id="under_post_kb">
+<div class="itnews c_ad_block">
+    <b>最新 IT 新闻</b>:
+    <br>
+ ·              <a href="https://news.cnblogs.com/n/655556/" target="_blank">部分Win7用户遭遇无法关机重启问题：附解决办法</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/655562/" target="_blank">他去遛了波士顿动力机器狗！不停地说Amazing…（附翻车现场）</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/655561/" target="_blank">百年古董电影秒变4K高清、60FPS，AI插值，还能着色</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/655560/" target="_blank">小米完成统一推送适配</a>
+            <br>
+ ·              <a href="https://news.cnblogs.com/n/655559/" target="_blank">贝索斯命运转折时刻：发现自己不够聪明 果断从物理系转到计算机系</a>
+            <br>
+    » <a href="https://news.cnblogs.com/" title="IT 新闻" target="_blank">更多新闻...</a>
+</div></div>
+    <div id="HistoryToday" class="c_ad_block"></div>
+    <script type="text/javascript">
+        fixPostBody();
+setTimeout(function() { incrementViewCount(cb_entryId); }, 50);        deliverAdT2();
+        deliverAdC1();
+        deliverAdC2();
+        loadNewsAndKb();
+        loadBlogSignature();
+LoadPostCategoriesTags(cb_blogId, cb_entryId);        LoadPostInfoBlock(cb_blogId, cb_entryId, cb_blogApp, cb_blogUserGuid);
+        GetPrevNextPost(cb_entryId, cb_blogId, cb_entryCreatedDate, cb_postType);
+        loadOptUnderPost();
+        GetHistoryToday(cb_blogId, cb_blogApp, cb_entryCreatedDate);
+    </script>
+</div></div>
+
+
+</div>
+<div id="leftcontent">
+	
+		<div id="leftcontentcontainer">
+			
+<div id="sidebar_news" class="newsItem"><!--done-->
+<div class="newsItem">
+	
+<div id="blog-news">
+    
+    <div id="profile_block">
+        昵称：
+        <a href="https://home.cnblogs.com/u/moyangvip/">
+            第五大洋
+        </a>
+        <br>
+        园龄：
+        <a href="https://home.cnblogs.com/u/moyangvip/" title="入园时间：2014-11-20">
+            5年2个月
+        </a>
+        <br>
+        粉丝：
+        <a href="https://home.cnblogs.com/u/moyangvip/followers/">
+            9
+        </a>
+        <br>
+        关注：
+        <a href="https://home.cnblogs.com/u/moyangvip/followees/">
+            1
+        </a>
+        <div id="p_b_follow">
+<a href="javascript:void(0)" onclick="follow(&#39;70e98234-9770-e411-b908-9dcfd8948a71&#39;)">+加关注</a></div>
+        <script>getFollowStatus('70e98234-9770-e411-b908-9dcfd8948a71');</script>
+    </div>
+</div>
+</div>
+
+</div>
+
+			<div id="calendar"><div id="blog-calendar" style="">
+
+<table id="blogCalendar" class="Cal" cellspacing="0" cellpadding="0" title="Calendar" border="0">
+    <tbody>
+        <tr>
+            <td colspan="7">
+                <table class="CalTitle" cellspacing="0" border="0">
+                    <tbody>
+                        <tr>
+                            <td class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2020/01/09&#39;); return false;">&lt;</a>
+                            </td>
+                            <td align="center">2020年2月</td>
+                            <td align="right" class="CalNextPrev">
+                                <a href="javascript:void(0);" onclick="loadBlogCalendar(&#39;2020/03/09&#39;); return false;">&gt;</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+                    <th class="CalDayHeader" align="center" abbr="日" scope="col">日</th>
+                    <th class="CalDayHeader" align="center" abbr="一" scope="col">一</th>
+                    <th class="CalDayHeader" align="center" abbr="二" scope="col">二</th>
+                    <th class="CalDayHeader" align="center" abbr="三" scope="col">三</th>
+                    <th class="CalDayHeader" align="center" abbr="四" scope="col">四</th>
+                    <th class="CalDayHeader" align="center" abbr="五" scope="col">五</th>
+                    <th class="CalDayHeader" align="center" abbr="六" scope="col">六</th>
+        </tr>
+            <tr>
+                            <td class="CalOtherMonthDay" align="center">26</td>
+                            <td class="CalOtherMonthDay" align="center">27</td>
+                            <td class="CalOtherMonthDay" align="center">28</td>
+                            <td class="CalOtherMonthDay" align="center">29</td>
+                            <td class="CalOtherMonthDay" align="center">30</td>
+                            <td class="CalOtherMonthDay" align="center">31</td>
+                    <td class="CalWeekendDay" align="center">
+                        1
+                    </td>
+            </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            2
+                        </td>
+                            <td class="" align="center">
+                                3
+                            </td>
+                            <td class="" align="center">
+                                4
+                            </td>
+                            <td class="" align="center">
+                                5
+                            </td>
+                            <td class="" align="center">
+                                6
+                            </td>
+                            <td class="" align="center">
+                                7
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            8
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalTodayDay" align="center">
+                            9
+                        </td>
+                            <td class="" align="center">
+                                10
+                            </td>
+                            <td class="" align="center">
+                                11
+                            </td>
+                            <td class="" align="center">
+                                12
+                            </td>
+                            <td class="" align="center">
+                                13
+                            </td>
+                            <td class="" align="center">
+                                14
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            15
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            16
+                        </td>
+                            <td class="" align="center">
+                                17
+                            </td>
+                            <td class="" align="center">
+                                18
+                            </td>
+                            <td class="" align="center">
+                                19
+                            </td>
+                            <td class="" align="center">
+                                20
+                            </td>
+                            <td class="" align="center">
+                                21
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            22
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalWeekendDay" align="center">
+                            23
+                        </td>
+                            <td class="" align="center">
+                                24
+                            </td>
+                            <td class="" align="center">
+                                25
+                            </td>
+                            <td class="" align="center">
+                                26
+                            </td>
+                            <td class="" align="center">
+                                27
+                            </td>
+                            <td class="" align="center">
+                                28
+                            </td>
+                        <td class="CalWeekendDay" align="center">
+                            29
+                        </td>
+                </tr>
+                <tr>
+                        <td class="CalOtherMonthDay" align="center">
+                            1
+                        </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                2
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                3
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                4
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                5
+                            </td>
+                            <td class="CalOtherMonthDay" align="center">
+                                6
+                            </td>
+                        <td class="CalOtherMonthDay" align="center">
+                            7
+                        </td>
+                </tr>
+    </tbody>
+</table></div></div>                
+                    <script>loadBlogDefaultCalendar();</script><br>
+			<div id="blog-sidecolumn">
+<!-- 搜索 -->
+<div id="sidebar_search" class="sidebar-block">
+    <div id="sidebar_search" class="mySearch">
+        <h3 class="catListTitle">搜索</h3>
+        <div id="sidebar_search_box">
+            <div id="widget_my_zzk" class="div_my_zzk">
+                <input type="text" id="q" onkeydown="return zzk_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="zzk_go()" type="button" value="找找看" id="btnZzk" class="btn_my_zzk">
+            </div>
+            <div id="widget_my_google" class="div_my_zzk">
+                <input type="text" name="google_q" id="google_q" onkeydown="return google_go_enter(event);" class="input_my_zzk">&nbsp;<input onclick="google_go()" type="button" value="谷歌搜索" class="btn_my_zzk">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 常用链接 -->
+<div id="sidebar_shortcut" class="sidebar-block">
+    
+<h3 class="catListTitle">
+常用链接
+</h3>
+<ul>
+        <li>
+
+<a href="https://www.cnblogs.com/moyangvip/p/" title="我的博客的随笔列表">我的随笔</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/moyangvip/MyComments.html" title="我的发表过的评论列表">我的评论</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/moyangvip/OtherPosts.html" title="我评论过的随笔列表">我的参与</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/moyangvip/RecentComments.html" title="我的博客的评论列表">最新评论</a>
+</li>
+        <li>
+
+<a href="https://www.cnblogs.com/moyangvip/tag/" title="我的博客的标签列表">我的标签</a>
+</li>
+</ul>
+
+<!-- TODO: 检查是否有使用这一部分的控件，如果没有则应该删除。 -->
+<div id="itemListLin_con" style="display:none">
+    <ul>
+
+    </ul>
+</div>
+
+</div>
+
+<!-- 最新随笔 -->
+
+
+
+<!-- 我的标签 -->
+<div id="sidebar_toptags" class="sidebar-block">
+    
+<h3>我的标签</h3>
+<div id="MyTag">
+    <ul>
+        
+        <li>
+            <a href="https://www.cnblogs.com/moyangvip/tag/%E5%BE%AE%E4%BF%A1/">微信</a>(1)
+        </li>
+        <li>
+            <a href="https://www.cnblogs.com/moyangvip/tag/%E6%96%B0%E9%97%BB%E7%88%AC%E8%99%AB/">新闻爬虫</a>(1)
+        </li>
+
+    </ul>
+</div>
+
+</div>
+
+<!-- 积分与排名 -->
+
+
+<!-- 随笔分类、随笔档案、文章分类、新闻分类、相册、链接 -->
+<div id="sidebar_categories">
+    
+		<h3 class="catListTitle">
+
+随笔分类
+
+
+</h3>
+				<ul class="catList">
+			
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/category/841377.html" rel="" target="">
+    C++服务器设计(8)
+</a>
+
+</li>
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/category/767591.html" rel="" target="">
+    Khala学习文档(9)
+</a>
+
+</li>
+			
+				</ul>
+		<h3 class="catListTitle">
+
+随笔档案
+
+
+</h3>
+				<ul class="catList">
+			
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/archive/2016/12.html" rel="" target="">
+    2016年12月(1)
+</a>
+
+</li>
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/archive/2016/06.html" rel="" target="">
+    2016年6月(8)
+</a>
+
+</li>
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/archive/2016/03.html" rel="" target="">
+    2016年3月(1)
+</a>
+
+</li>
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/archive/2016/01.html" rel="" target="">
+    2016年1月(2)
+</a>
+
+</li>
+				<li class="catListItem"> 
+<a href="https://www.cnblogs.com/moyangvip/archive/2015/12.html" rel="" target="">
+    2015年12月(7)
+</a>
+
+</li>
+			
+				</ul>
+
+
+</div>
+
+<!-- 最新评论 -->
+<div id="sidebar_recentcomments" class="sidebar-block">
+    <div id="recent_comments_wrap" class="RecentComment">
+    <h3 class="catListTitle">最新评论</h3>
+    <div class="RecentCommentBlock">
+        <ul>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/moyangvip/p/5360837.html#4495289">1. Re:C++服务器设计（一）：基于I/O复用的Reactor模式</a></li>
+                    <li class="recent_comment_body">总结的太好了！！</li>
+                    <li class="recent_comment_author">--xuchanglong</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/moyangvip/p/5586045.html#4255312">2. Re:C++服务器设计（七）：聊天系统服务端实现</a></li>
+                    <li class="recent_comment_body">想看看源码，请问可以把代码发送到我的邮箱吗？我邮箱2482003411@qq.com</li>
+                    <li class="recent_comment_author">--root-l</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/moyangvip/p/5259700.html#4208027">3. Re:Memcached内存管理模型分析</a></li>
+                    <li class="recent_comment_body">收获很大，多谢！</li>
+                    <li class="recent_comment_author">--本尘</li>
+                    <li class="recent_comment_title"><a href="https://www.cnblogs.com/moyangvip/p/5360837.html#4156001">4. Re:C++服务器设计（一）：基于I/O复用的Reactor模式</a></li>
+                    <li class="recent_comment_body">shihuan11@163.com,能把源码给我看看吗？</li>
+                    <li class="recent_comment_author">--欢石</li>
+                    <li class="recent_comment_title"><a href="http://www.cnblogs.com/moyangvip/p/5360837.html#3922713">5. Re:C++服务器设计（一）：基于I/O复用的Reactor模式</a></li>
+                    <li class="recent_comment_body">你好，博主。我是一名大二的学生，想找个项目瞧瞧，你可以提供一下源码看看吗？？我的邮箱是 meilidejiegeng@163.com   谢谢</li>
+                    <li class="recent_comment_author">--再见了，美丽的桔梗！！！</li>
+        </ul>
+    </div>
+</div>
+</div>
+
+
+
+<!-- 阅读排行榜 -->
+<div id="sidebar_topviewedposts" class="sidebar-block">
+    
+<div id="topview_posts_wrap">
+    <h3 class="catListTitle">阅读排行榜</h3>
+    <div id="TopViewPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5586045.html">
+                            1. C++服务器设计（七）：聊天系统服务端实现(4864)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5586014.html">
+                            2. C++服务器设计（零）：总体设计(3589)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5049673.html">
+                            3. 1、发布C++实现的TCP网络框架Khala(3505)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5360837.html">
+                            4. C++服务器设计（一）：基于I/O复用的Reactor模式(2392)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5259700.html">
+                            5. Memcached内存管理模型分析(2017)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- 评论排行榜 -->
+<div id="sidebar_topcommentedposts" class="sidebar-block">
+    
+<div id="topfeedback_posts_wrap">
+    <h3 class="catListTitle">评论排行榜</h3>
+    <div id="TopFeedbackPostsBlock">
+        <ul style="word-break:break-all">
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5049673.html">
+                            1. 1、发布C++实现的TCP网络框架Khala(2)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5259700.html">
+                            2. Memcached内存管理模型分析(2)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5360837.html">
+                            3. C++服务器设计（一）：基于I/O复用的Reactor模式(2)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5586014.html">
+                            4. C++服务器设计（零）：总体设计(1)
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.cnblogs.com/moyangvip/p/5586045.html">
+                            5. C++服务器设计（七）：聊天系统服务端实现(1)
+                        </a>
+                    </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<!-- 推荐排行榜 -->
+<div id="sidebar_topdiggedposts" class="sidebar-block">
+    
+<div id="topdigg_posts_wrap">
+    <div class="catListView">
+        <h3 class="catListTitle">推荐排行榜</h3>
+        <div id="TopDiggPostsBlock">
+            <ul style="word-break: break-all">
+                        <li>
+                            <a href="https://www.cnblogs.com/moyangvip/p/5259700.html">
+                                1. Memcached内存管理模型分析(1)
+                            </a>
+                        </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</div></div>
+                    <script>loadBlogSideColumn();</script></div>
+	
+</div>
+<!--done-->
+<div class="footer">
+	Powered by: <a href="http://www.cnblogs.com/">博客园</a>	模板提供：<a href="http://blog.hjenglish.com/">沪江博客</a>
+	Copyright © 2020 第五大洋
+<br><span id="poweredby">Powered by .NET Core 3.1.1 on Linux</span>
+
+</div>
+
+
+
+
+
+
+    
+
+</body></html>
