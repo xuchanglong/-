@@ -1,0 +1,7 @@
+/* advertise */
+#site_nav_under,#ad_under_post_holder,#under_post_news,#google_ad_c2,#under_post_kb{
+width:0;
+height:0;
+display:none;
+overflow:hidden;
+}
